@@ -40,7 +40,7 @@
             <div class="lg:col-span-7 space-y-4 sm:space-y-6 text-left">
                 <div class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-300 text-emerald-800 text-xs font-black uppercase tracking-wider shadow-xs">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span>Kewirausahaan Mahasiswa • Fresh Daily</span>
+                    <span>Fresh Everyday</span>
                 </div>
 
                 <h1 class="hidden sm:block text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
@@ -94,7 +94,7 @@
                             <!-- Floating Tag Badge -->
                             <div class="absolute top-2.5 left-2.5 sm:top-4 sm:left-4 bg-emerald-600/95 backdrop-blur-md text-white text-[10px] sm:text-xs font-black px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
                                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-300"></span>
-                                <span>OPEN ORDER HARI INI</span>
+                                <span>OPEN ORDER</span>
                             </div>
 
                             <div class="absolute bottom-2 inset-x-2 sm:bottom-4 sm:inset-x-4 bg-slate-900/85 backdrop-blur-md rounded-xl sm:rounded-2xl p-2 sm:p-3 text-white flex items-center justify-between gap-2">
