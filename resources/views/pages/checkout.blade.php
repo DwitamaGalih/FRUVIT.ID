@@ -123,7 +123,7 @@
                                 <input type="radio" name="delivery_method" value="delivery" x-model="deliveryMethod" class="sr-only">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="text-base sm:text-xl">🛵</span>
-                                    <span class="text-[9px] sm:text-xs font-bold text-slate-900 bg-yellow-400 px-1.5 py-0.2 rounded-md">+5k</span>
+                                    <span class="text-[9px] sm:text-xs font-bold text-slate-900 bg-yellow-400 px-1.5 py-0.2 rounded-md">+1k</span>
                                 </div>
                                 <span class="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight">Delivery</span>
                                 <span class="text-[10px] text-slate-400 mt-0.5 leading-tight">Antar ke kampus/kos</span>

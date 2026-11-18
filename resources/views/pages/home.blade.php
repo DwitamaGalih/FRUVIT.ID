@@ -238,19 +238,12 @@
                             </div>
 
                             <div class="flex items-center gap-1 shrink-0">
-                                <button type="button" 
-                                        @click="openProductDetail({{ $product->id }})"
-                                        class="hidden sm:inline-flex p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition text-xs"
-                                        title="Detail Produk">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                </button>
-                                
                                 <button type="button"
-                                        @click="quickAddToCart({{ $product->id }})"
+                                        @click="openProductDetail({{ $product->id }})"
                                         class="w-7 h-7 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-extrabold text-xs flex items-center justify-center gap-1 shadow-xs hover:shadow-md transition active:scale-90 cursor-pointer"
-                                        title="Tambah ke Keranjang">
+                                        title="Pilih & Atur Menu">
                                     <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                                    <span class="hidden sm:inline">Tambah</span>
+                                    <span class="hidden sm:inline">Pesan</span>
                                 </button>
                             </div>
                         </div>

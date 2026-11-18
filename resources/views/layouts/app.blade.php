@@ -544,9 +544,10 @@
 
                             <button @click="submitModalToCart()" 
                                     type="button" 
-                                    class="grow bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-black text-xs py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    class="grow bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-black text-xs py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
                                 <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                                 <span>Tambah ke Keranjang</span>
+                                <span class="text-emerald-100 font-extrabold" x-show="productModal.item.price" x-text="`• Rp ${new Intl.NumberFormat('id-ID').format(productModal.item.price * productModal.qty)}`"></span>
                             </button>
                         </div>
                     </div>
@@ -675,26 +676,8 @@
                 },
 
                 quickAddToCart(productId) {
-                    fetch('{{ route('cart.add') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            quantity: 1
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.cart) {
-                            this.cart = data.cart;
-                            this.showToast('✅ Berhasil ditambahkan!');
-                        }
-                    })
-                    .catch(err => console.error(err));
+                    // Selalu buka modal detail produk agar pelanggan dapat menyesuaikan varian/jumlah/catatan
+                    this.openProductDetail(productId);
                 },
 
                 openProductDetail(productId) {
