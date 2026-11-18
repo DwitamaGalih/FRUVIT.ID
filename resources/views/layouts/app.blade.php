@@ -23,25 +23,6 @@
       x-data="fruvitApp()"
       x-init="initApp()">
 
-    <!-- Top Announcement Bar (Ultra Compact on Mobile) -->
-    <div class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 text-white text-[11px] py-1.5 px-3 sm:px-4 shadow-xs">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            <div class="flex items-center space-x-1.5 truncate">
-                <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-black bg-yellow-400 text-emerald-950 uppercase tracking-wide">
-                    BUKA
-                </span>
-                <span class="truncate font-medium text-emerald-100">🍓 100% Buah Segar Pilihan • Fresh Daily</span>
-            </div>
-            <div class="flex items-center space-x-3 text-emerald-200 text-[11px] shrink-0">
-                <a href="{{ route('order.track') }}" class="hover:text-yellow-300 transition flex items-center gap-1 font-semibold">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                    <span class="hidden sm:inline">Lacak Pesanan</span>
-                    <span class="sm:hidden">Lacak</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Navigation Bar (Compact Height on Mobile) -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100/80 shadow-xs transition">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
