@@ -226,128 +226,180 @@
         </div>
     </nav>
 
-    <!-- Slide-over Cart Drawer -->
+    <!-- Slide-over Cart Drawer / Native Mobile Bottom Sheet -->
     <div x-show="openCartDrawer" 
          x-cloak
          class="relative z-50" 
          aria-labelledby="slide-over-title" 
          role="dialog" 
          aria-modal="true">
+        <!-- Modern Soft Blur Backdrop -->
         <div x-show="openCartDrawer"
-             x-transition:enter="ease-in-out duration-300"
+             x-transition:enter="ease-out duration-300"
              x-transition:enter-start="opacity-0"
              x-transition:enter-end="opacity-100"
-             x-transition:leave="ease-in-out duration-300"
+             x-transition:leave="ease-in duration-200"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
              @click="openCartDrawer = false"
-             class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+             class="fixed inset-0 bg-slate-950/50 backdrop-blur-xs transition-opacity"></div>
 
-        <div class="fixed inset-0 overflow-hidden">
+        <div class="fixed inset-0 overflow-hidden pointer-events-none">
             <div class="absolute inset-0 overflow-hidden">
-                <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
+                <div class="pointer-events-none fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto flex max-w-full">
                     <div x-show="openCartDrawer"
-                         x-transition:enter="transform transition ease-in-out duration-300"
-                         x-transition:enter-start="translate-x-full"
-                         x-transition:enter-end="translate-x-0"
-                         x-transition:leave="transform transition ease-in-out duration-300"
-                         x-transition:leave-start="translate-x-0"
-                         x-transition:leave-end="translate-x-full"
-                         class="pointer-events-auto w-screen max-w-md">
+                         x-transition:enter="transform transition ease-out duration-300"
+                         x-transition:enter-start="translate-y-full sm:translate-y-0 sm:translate-x-full"
+                         x-transition:enter-end="translate-y-0 sm:translate-x-0"
+                         x-transition:leave="transform transition ease-in duration-250"
+                         x-transition:leave-start="translate-y-0 sm:translate-x-0"
+                         x-transition:leave-end="translate-y-full sm:translate-y-0 sm:translate-x-full"
+                         class="pointer-events-auto w-full sm:w-[440px] max-h-[90vh] sm:max-h-full h-auto sm:h-full flex flex-col bg-white rounded-t-[32px] sm:rounded-t-none sm:rounded-l-[32px] shadow-[0_-12px_40px_rgba(0,0,0,0.14)] sm:shadow-2xl border-t sm:border-t-0 sm:border-l border-slate-100 overflow-hidden">
                         
-                        <div class="flex h-full flex-col bg-white shadow-2xl">
-                            <!-- Header -->
-                            <div class="px-5 py-4 bg-gradient-to-r from-emerald-600 to-green-600 text-white flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <div class="p-1.5 bg-white/20 rounded-xl">
-                                        <svg class="w-5 h-5 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        <!-- Mobile Drag Handle -->
+                        <div class="sm:hidden w-12 h-1.5 bg-slate-200 rounded-full mx-auto my-2.5 shrink-0"></div>
+
+                        <!-- Clean Modern Header -->
+                        <div class="px-5 py-3.5 sm:py-4 bg-white/95 backdrop-blur-md border-b border-slate-100 flex items-center justify-between shrink-0">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-50 to-green-100 border border-emerald-200/60 flex items-center justify-center text-emerald-700 shadow-2xs">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-sm sm:text-base font-black text-slate-900 tracking-tight" id="slide-over-title">Keranjang Pesanan</h2>
+                                    <span class="inline-flex items-center px-2 py-0.2 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200/60" x-text="`${cart.count} item dipilih`">
+                                        0 item dipilih
+                                    </span>
+                                </div>
+                            </div>
+                            <button @click="openCartDrawer = false" 
+                                    type="button" 
+                                    class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition active:scale-90 cursor-pointer"
+                                    title="Tutup">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+
+                        <!-- Cart Items List / Clean Empty State -->
+                        <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+                            
+                            <!-- Empty State Card (Clean, modern, aesthetic) -->
+                            <template x-if="Object.keys(cart.items).length === 0">
+                                <div class="py-6 sm:py-8 px-2 flex flex-col items-center text-center">
+                                    <div class="relative w-20 h-20 mb-3.5 flex items-center justify-center rounded-3xl bg-gradient-to-tr from-emerald-50 via-teal-50 to-amber-50 border border-emerald-100 shadow-sm">
+                                        <span class="text-4xl">🥗</span>
+                                        <span class="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-yellow-400 text-emerald-950 font-black text-xs flex items-center justify-center shadow-xs">✨</span>
                                     </div>
-                                    <div>
-                                        <h2 class="text-sm sm:text-base font-extrabold" id="slide-over-title">Keranjang Pesanan</h2>
-                                        <p class="text-[11px] text-emerald-100 font-medium" x-text="`${cart.count} item dipilih`">0 item dipilih</p>
+                                    <h3 class="text-base sm:text-lg font-black text-slate-900">Keranjang Masih Kosong</h3>
+                                    <p class="text-xs text-slate-500 mt-1.5 max-w-[260px] leading-relaxed">
+                                        Yuk pilih salad buah segar, susu jelly manis creamy, atau buah potong dingin favoritmu!
+                                    </p>
+                                    
+                                    <a href="{{ route('menu.index') }}" 
+                                       @click="openCartDrawer = false" 
+                                       class="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-xs font-black px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-md shadow-emerald-600/20 active:scale-95 transition cursor-pointer">
+                                        <span>Lihat Menu FRUVIT.ID</span>
+                                        <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                    </a>
+
+                                    <!-- Quick Shortcuts / Inspirasi Menu -->
+                                    <div class="mt-6 pt-5 border-t border-slate-100 w-full">
+                                        <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2.5">Menu Terfavorit Hari Ini:</div>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <a href="{{ route('menu.index', ['kategori' => 'salad-buah']) }}" @click="openCartDrawer = false" class="p-2 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-200 transition text-center group">
+                                                <div class="text-xl mb-1 group-hover:scale-110 transition-transform">🥗</div>
+                                                <div class="text-[11px] font-extrabold text-slate-800 leading-tight">Salad Buah</div>
+                                                <div class="text-[10px] font-bold text-emerald-600 mt-0.5">13k</div>
+                                            </a>
+                                            <a href="{{ route('menu.index', ['kategori' => 'susu-jelly']) }}" @click="openCartDrawer = false" class="p-2 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-200 transition text-center group">
+                                                <div class="text-xl mb-1 group-hover:scale-110 transition-transform">🥤</div>
+                                                <div class="text-[11px] font-extrabold text-slate-800 leading-tight">Susu Jelly</div>
+                                                <div class="text-[10px] font-bold text-emerald-600 mt-0.5">12,5k</div>
+                                            </a>
+                                            <a href="{{ route('menu.index', ['kategori' => 'buah-potong']) }}" @click="openCartDrawer = false" class="p-2 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-200 transition text-center group">
+                                                <div class="text-xl mb-1 group-hover:scale-110 transition-transform">🍉</div>
+                                                <div class="text-[11px] font-extrabold text-slate-800 leading-tight">Buah Potong</div>
+                                                <div class="text-[10px] font-bold text-emerald-600 mt-0.5">10k</div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <button @click="openCartDrawer = false" type="button" class="rounded-xl p-1.5 text-white/80 hover:text-white hover:bg-white/20 transition cursor-pointer">
-                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
-                            </div>
+                            </template>
 
-                            <!-- Cart Items List -->
-                            <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
-                                <template x-if="Object.keys(cart.items).length === 0">
-                                    <div class="text-center py-12">
-                                        <div class="w-16 h-16 mx-auto mb-3 bg-emerald-50 rounded-full flex items-center justify-center text-3xl">
-                                            🥗
-                                        </div>
-                                        <h3 class="text-sm font-bold text-slate-800">Keranjang Masih Kosong</h3>
-                                        <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Yuk pilih salad buah segar, susu jelly manis creamy, atau buah potong favoritmu!</p>
-                                        <a href="{{ route('menu.index') }}" @click="openCartDrawer = false" class="mt-4 inline-flex items-center gap-2 bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-emerald-700 transition">
-                                            Lihat Menu FRUVIT.ID
-                                        </a>
-                                    </div>
-                                </template>
+                            <!-- Filled Items List (Clean Modern Cards) -->
+                            <template x-for="(item, id) in cart.items" :key="id">
+                                <div class="bg-white border border-slate-200/80 hover:border-emerald-200 rounded-2xl p-2.5 sm:p-3 flex gap-3 items-center shadow-2xs hover:shadow-xs transition">
+                                    <img :src="item.image_url" :alt="item.name" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-100 shrink-0">
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 truncate" x-text="item.name"></h4>
+                                        <div class="text-xs font-black text-emerald-600 mt-0.5" x-text="item.formatted_price"></div>
+                                        
+                                        <!-- Addon badges (Susu Jelly) -->
+                                        <template x-if="item.sugar_level || item.jelly_topping">
+                                            <div class="flex flex-wrap gap-1 mt-1">
+                                                <span x-show="item.sugar_level" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-200/80" x-text="item.sugar_level"></span>
+                                                <span x-show="item.jelly_topping" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-purple-50 text-purple-800 border border-purple-200/80" x-text="item.jelly_topping"></span>
+                                            </div>
+                                        </template>
 
-                                <template x-for="(item, id) in cart.items" :key="id">
-                                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 sm:p-3 flex gap-2.5 sm:gap-3 items-center">
-                                        <img :src="item.image_url" :alt="item.name" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-200 shrink-0">
-                                        <div class="flex-1 min-w-0">
-                                            <h4 class="text-xs font-bold text-slate-800 truncate" x-text="item.name"></h4>
-                                            <div class="text-xs font-extrabold text-emerald-600 mt-0.5" x-text="item.formatted_price"></div>
-                                            
-                                            <!-- Addon badges (Susu Jelly) -->
-                                            <template x-if="item.sugar_level || item.jelly_topping">
-                                                <div class="flex flex-wrap gap-1 mt-1">
-                                                    <span x-show="item.sugar_level" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200" x-text="item.sugar_level"></span>
-                                                    <span x-show="item.jelly_topping" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-purple-100 text-purple-800 border border-purple-200" x-text="item.jelly_topping"></span>
-                                                </div>
-                                            </template>
-
-                                            <div class="text-[10px] text-slate-500 truncate mt-0.5" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
-                                            
-                                            <!-- Qty control -->
-                                            <div class="flex items-center gap-1.5 mt-1.5">
+                                        <div class="text-[10px] text-slate-400 italic truncate mt-0.5" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
+                                        
+                                        <!-- Tactile Stepper Qty Control -->
+                                        <div class="flex items-center gap-1.5 mt-2">
+                                            <div class="inline-flex items-center bg-slate-100 rounded-xl p-0.5 border border-slate-200/60 shadow-2xs">
                                                 <button @click="updateCartQty(item.cart_key || item.id, item.quantity - 1)" 
                                                         type="button" 
-                                                        class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-white border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 font-bold text-xs transition cursor-pointer">
+                                                        class="w-6 h-6 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center text-slate-700 font-black hover:bg-slate-100 active:scale-90 text-xs transition cursor-pointer">
                                                     -
                                                 </button>
-                                                <span class="text-xs font-bold px-1 text-slate-800" x-text="item.quantity"></span>
+                                                <span class="w-7 text-center text-xs font-black text-slate-900" x-text="item.quantity"></span>
                                                 <button @click="updateCartQty(item.cart_key || item.id, item.quantity + 1)" 
                                                         type="button" 
-                                                        class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center hover:bg-emerald-700 font-bold text-xs transition cursor-pointer">
+                                                        class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center hover:bg-emerald-700 active:scale-90 font-black text-xs transition cursor-pointer shadow-2xs">
                                                     +
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="text-right flex flex-col justify-between items-end h-14 sm:h-16">
-                                            <button @click="removeFromCart(item.cart_key || item.id)" type="button" class="text-slate-400 hover:text-rose-600 transition p-0.5" title="Hapus">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                            </button>
-                                            <div class="text-xs font-bold text-slate-900" x-text="item.formatted_subtotal"></div>
-                                        </div>
                                     </div>
-                                </template>
+                                    <div class="text-right flex flex-col justify-between items-end h-16 sm:h-18 shrink-0">
+                                        <button @click="removeFromCart(item.cart_key || item.id)" 
+                                                type="button" 
+                                                class="text-slate-300 hover:text-rose-500 p-1 rounded-lg hover:bg-rose-50 transition cursor-pointer" 
+                                                title="Hapus">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                        <div class="text-xs sm:text-sm font-black text-slate-900" x-text="item.formatted_subtotal"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Modern Clean Sticky Footer with Breakdown -->
+                        <div class="border-t border-slate-100 p-4 sm:p-5 bg-white space-y-3 shrink-0 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]" x-show="Object.keys(cart.items).length > 0">
+                            <div class="flex justify-between items-center text-xs text-slate-500 font-semibold">
+                                <span x-text="`Subtotal (${cart.count} item)`">Subtotal</span>
+                                <span class="text-base sm:text-lg font-black text-slate-900" x-text="cart.formatted_subtotal"></span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5 text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-xl border border-emerald-100 font-bold">
+                                <span>🛵</span>
+                                <span>Bisa pesan antar (delivery kampus) atau ambil sendiri (pickup).</span>
                             </div>
 
-                            <!-- Footer / Checkout -->
-                            <div class="border-t border-slate-200 p-4 sm:p-6 bg-white space-y-2.5" x-show="Object.keys(cart.items).length > 0">
-                                <div class="flex justify-between items-center text-xs sm:text-sm font-semibold text-slate-600">
-                                    <span>Subtotal</span>
-                                    <span class="text-sm sm:text-base font-extrabold text-slate-900" x-text="cart.formatted_subtotal"></span>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-2 pt-1">
-                                    <a href="{{ route('cart.index') }}" 
-                                       @click="openCartDrawer = false"
-                                       class="w-full text-center py-2.5 px-3 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition">
-                                        Keranjang
-                                    </a>
-                                    <a href="{{ route('checkout.index') }}" 
-                                       @click="openCartDrawer = false"
-                                       class="w-full text-center py-2.5 px-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:shadow-lg transition">
-                                        Checkout &rarr;
-                                    </a>
-                                </div>
+                            <div class="grid grid-cols-2 gap-2 pt-0.5">
+                                <a href="{{ route('cart.index') }}" 
+                                   @click="openCartDrawer = false"
+                                   class="w-full text-center py-3 px-3 border border-slate-200 rounded-xl sm:rounded-2xl text-xs font-extrabold text-slate-700 hover:bg-slate-50 transition active:scale-95">
+                                    Buka Keranjang
+                                </a>
+                                <a href="{{ route('checkout.index') }}" 
+                                   @click="openCartDrawer = false"
+                                   class="w-full inline-flex items-center justify-center gap-1.5 py-3 px-3 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl sm:rounded-2xl text-xs font-black shadow-md shadow-emerald-600/20 hover:shadow-lg transition active:scale-95">
+                                    <span>Checkout</span>
+                                    <svg class="w-3.5 h-3.5 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </a>
                             </div>
                         </div>
 

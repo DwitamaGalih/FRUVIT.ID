@@ -19,19 +19,42 @@
         </div>
 
         <template x-if="Object.keys(cart.items).length === 0">
-            <div class="text-center py-12 sm:py-20 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-2xs max-w-md mx-auto">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 bg-emerald-50 rounded-full flex items-center justify-center text-4xl">
-                    🥗
+            <div class="text-center py-10 sm:py-16 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-xs max-w-md mx-auto">
+                <div class="relative w-24 h-24 mx-auto mb-4 flex items-center justify-center rounded-3xl bg-gradient-to-tr from-emerald-50 via-teal-50 to-amber-50 border border-emerald-100 shadow-sm">
+                    <span class="text-5xl">🥗</span>
+                    <span class="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full bg-yellow-400 text-emerald-950 font-black text-sm flex items-center justify-center shadow-xs">✨</span>
                 </div>
-                <h2 class="text-base sm:text-xl font-black text-slate-900">Keranjang Anda Masih Kosong</h2>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-xs mx-auto leading-relaxed">
-                    Yuk pilih salad buah segar, susu jelly nikmat, atau buah potong dingin sekarang!
+                <h2 class="text-lg sm:text-2xl font-black text-slate-900">Keranjang Belanja Masih Kosong</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2 max-w-xs mx-auto leading-relaxed">
+                    Yuk pilih salad buah segar, susu jelly manis creamy, atau buah potong dingin favoritmu!
                 </p>
-                <div class="mt-4">
-                    <a href="{{ route('menu.index') }}" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3.5 rounded-xl sm:rounded-2xl shadow-sm transition">
-                        <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                <div class="mt-5">
+                    <a href="{{ route('menu.index') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-black text-xs sm:text-sm px-6 py-3.5 rounded-2xl shadow-md shadow-emerald-600/20 active:scale-95 transition">
                         <span>Pilih Menu Sekarang</span>
+                        <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
+                </div>
+
+                <!-- Category quick shortcuts -->
+                <div class="mt-8 pt-6 border-t border-slate-100">
+                    <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Pilihan Menu Terfavorit:</div>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <a href="{{ route('menu.index', ['kategori' => 'salad-buah']) }}" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-200 transition text-center group">
+                            <div class="text-2xl mb-1 group-hover:scale-110 transition-transform">🥗</div>
+                            <div class="text-xs font-extrabold text-slate-800 leading-tight">Salad Buah</div>
+                            <div class="text-[10px] font-bold text-emerald-600 mt-0.5">13k</div>
+                        </a>
+                        <a href="{{ route('menu.index', ['kategori' => 'susu-jelly']) }}" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-200 transition text-center group">
+                            <div class="text-2xl mb-1 group-hover:scale-110 transition-transform">🥤</div>
+                            <div class="text-xs font-extrabold text-slate-800 leading-tight">Susu Jelly</div>
+                            <div class="text-[10px] font-bold text-emerald-600 mt-0.5">12,5k</div>
+                        </a>
+                        <a href="{{ route('menu.index', ['kategori' => 'buah-potong']) }}" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-200 transition text-center group">
+                            <div class="text-2xl mb-1 group-hover:scale-110 transition-transform">🍉</div>
+                            <div class="text-xs font-extrabold text-slate-800 leading-tight">Buah Potong</div>
+                            <div class="text-[10px] font-bold text-emerald-600 mt-0.5">10k</div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </template>
