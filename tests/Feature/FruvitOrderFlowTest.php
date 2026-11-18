@@ -145,6 +145,7 @@ class FruvitOrderFlowTest extends TestCase
 
         $order->refresh();
         $this->assertEquals('pending_verification', $order->payment_status);
+        $this->assertEquals('processing', $order->order_status);
         $this->assertNotNull($order->payment_proof);
         Storage::disk('public')->assertExists($order->payment_proof);
     }

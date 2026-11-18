@@ -45,11 +45,12 @@ class OrderController extends Controller
             $order->update([
                 'payment_proof' => $path,
                 'payment_status' => 'pending_verification',
+                'order_status' => 'processing',
             ]);
         }
 
         return redirect()->route('order.show', $order->order_number)
-            ->with('success', 'Bukti pembayaran berhasil diunggah! Admin akan segera memverifikasi pesanan Anda.');
+            ->with('success', 'Bukti pembayaran berhasil diunggah! Pesanan Anda kini sedang disiapkan.');
     }
 
     public function track(Request $request): View
