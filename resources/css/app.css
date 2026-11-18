@@ -5,11 +5,13 @@
 @source '../views/**/*.blade.php';
 
 @theme {
-    --font-sans: 'Plus Jakarta Sans', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-    --color-fruvit-green: #16a34a;
-    --color-fruvit-green-dark: #15803d;
-    --color-fruvit-yellow: #facc15;
-    --color-fruvit-orange: #ea580c;
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --color-primary-blue: #2563eb;
+    --color-dark-blue: #1e40af;
+    --color-soft-blue: #dbeafe;
+    --color-light-blue: #eff6ff;
+    --color-fresh-green: #16a34a;
+    --color-fruit-yellow: #facc15;
 }
 
 [x-cloak] {
@@ -22,7 +24,7 @@
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
     background: #cbd5e1;
