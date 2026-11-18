@@ -32,7 +32,25 @@
                     </p>
                 </div>
 
-                <!-- Visual Promo Banner for Mobile (Clean, No cluttered overlay) -->
+                <!-- Value Highlights / Trust Card (Dipindah ke atas Card Open Order - Responsif Mobile & Desktop) -->
+                <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200/80 p-2.5 sm:p-4 shadow-2xs max-w-md">
+                    <div class="grid grid-cols-3 divide-x divide-slate-100 text-center items-center">
+                        <div class="px-1.5 sm:px-3">
+                            <span class="block text-xs sm:text-lg font-black text-slate-900 tracking-tight">100%</span>
+                            <span class="block text-[9px] sm:text-xs text-slate-500 font-semibold leading-tight mt-0.5 truncate">Buah Pilihan</span>
+                        </div>
+                        <div class="px-1.5 sm:px-3">
+                            <span class="block text-xs sm:text-lg font-black text-slate-900 tracking-tight">Mulai 10k</span>
+                            <span class="block text-[9px] sm:text-xs text-slate-500 font-semibold leading-tight mt-0.5 truncate">Bersahabat</span>
+                        </div>
+                        <div class="px-1.5 sm:px-3">
+                            <span class="block text-xs sm:text-lg font-black text-blue-600 tracking-tight truncate">QRIS & Cash</span>
+                            <span class="block text-[9px] sm:text-xs text-slate-500 font-semibold leading-tight mt-0.5 truncate">Pickup & Antar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Promo Banner for Mobile (Card Open Order) -->
                 <div class="block lg:hidden my-1">
                     <div class="relative bg-white rounded-2xl p-2 shadow-xs border border-slate-200/80 overflow-hidden">
                         <div class="relative rounded-xl overflow-hidden aspect-[16/10] bg-slate-100">
@@ -60,22 +78,6 @@
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         <span>Cek Pesanan</span>
                     </a>
-                </div>
-
-                <!-- Trust Strip -->
-                <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-3.5 sm:pt-6 border-t border-slate-200/80 max-w-md">
-                    <div>
-                        <div class="text-sm sm:text-xl font-black text-slate-900">100%</div>
-                        <div class="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Buah Segar Pilihan</div>
-                    </div>
-                    <div>
-                        <div class="text-sm sm:text-xl font-black text-slate-900">Mulai 10k</div>
-                        <div class="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Harga Bersahabat</div>
-                    </div>
-                    <div>
-                        <div class="text-sm sm:text-xl font-black text-slate-900">QRIS / Cash</div>
-                        <div class="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Pickup & Delivery</div>
-                    </div>
                 </div>
 
             </div>
