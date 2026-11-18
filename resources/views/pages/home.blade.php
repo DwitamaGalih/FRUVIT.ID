@@ -50,17 +50,11 @@
                     </div>
                 </div>
 
-                <!-- Visual Promo Banner for Mobile (Card Open Order) -->
+                <!-- Visual Promo Banner for Mobile (Fit to Card, Tidak Terpotong) -->
                 <div class="block lg:hidden my-1">
                     <div class="relative bg-white rounded-2xl p-2 shadow-xs border border-slate-200/80 overflow-hidden">
-                        <div class="relative rounded-xl overflow-hidden aspect-[16/10] bg-slate-100">
-                            <img src="{{ asset('images/banner-promo.jpg') }}" alt="FRUVIT.ID Fresh Fruit" class="w-full h-full object-cover">
-                            
-                            <!-- Clean Tag -->
-                            <div class="absolute top-2.5 left-2.5 bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
-                                <span>OPEN ORDER</span>
-                            </div>
+                        <div class="relative rounded-xl overflow-hidden aspect-square bg-slate-50 flex items-center justify-center">
+                            <img src="{{ asset('images/banner-promo.jpg') }}" alt="FRUVIT.ID Open Order" class="w-full h-full object-contain rounded-lg">
                         </div>
                     </div>
                 </div>
@@ -82,17 +76,11 @@
 
             </div>
 
-            <!-- Right Hero Visual Promo Card (Desktop Only) -->
+            <!-- Right Hero Visual Promo Card (Desktop Only - Fit to Card, Tidak Terpotong) -->
             <div class="hidden lg:block lg:col-span-5 relative">
                 <div class="relative bg-white rounded-3xl p-3 shadow-md border border-slate-200/80 overflow-hidden">
-                    <div class="relative rounded-2xl overflow-hidden aspect-square bg-slate-100">
-                        <img src="{{ asset('images/banner-promo.jpg') }}" alt="FRUVIT.ID Fresh Fruit" class="w-full h-full object-cover">
-                        
-                        <!-- Floating Tag -->
-                        <div class="absolute top-3 left-3 bg-blue-600/95 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
-                            <span>OPEN ORDER</span>
-                        </div>
+                    <div class="relative rounded-2xl overflow-hidden aspect-square bg-slate-50 flex items-center justify-center">
+                        <img src="{{ asset('images/banner-promo.jpg') }}" alt="FRUVIT.ID Open Order" class="w-full h-full object-contain rounded-xl">
                     </div>
                 </div>
             </div>
