@@ -445,6 +445,17 @@
 
                         <p class="text-xs text-slate-500 leading-relaxed" x-text="productModal.item.description"></p>
 
+                        <!-- Button Info Jadwal Pengambilan -->
+                        <button type="button" 
+                                @click="openScheduleModal = true" 
+                                class="w-full flex items-center justify-between p-2.5 rounded-xl bg-blue-50/70 border border-blue-100 text-blue-700 text-xs font-bold hover:bg-blue-100 transition cursor-pointer">
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>Lihat Jadwal Pengambilan</span>
+                            </div>
+                            <span class="text-[10px] text-blue-600 font-semibold underline">Senin & Kamis &rarr;</span>
+                        </button>
+
                         <!-- Susu Jelly Add-on Section (Sugar Level & Topping Jelly) -->
                         <template x-if="productModal.item.category_slug === 'susu-jelly'">
                             <div class="p-3.5 bg-blue-50/60 rounded-xl border border-blue-100 space-y-3.5">
@@ -562,6 +573,102 @@
         <button @click="toast.show = false" class="text-slate-400 hover:text-white">&times;</button>
     </div>
 
+    <!-- Modal Jadwal Pengambilan (Batch Ready) -->
+    <div x-show="openScheduleModal" 
+         x-cloak
+         class="relative z-50" 
+         role="dialog" 
+         aria-modal="true">
+        <div x-show="openScheduleModal"
+             x-transition:enter="ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             @click="openScheduleModal = false"
+             class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 text-center">
+                <div x-show="openScheduleModal"
+                     x-transition:enter="ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-8 sm:scale-95"
+                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                     class="relative transform overflow-hidden rounded-t-[28px] sm:rounded-2xl bg-white text-left shadow-2xl transition-all w-full sm:max-w-md border border-slate-100 p-5 sm:p-6 space-y-4">
+                    
+                    <!-- Header -->
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-sm sm:text-base font-bold text-slate-900">Jadwal Pengambilan</h3>
+                                <p class="text-[11px] text-slate-400">Batch Ready FRUVIT.ID</p>
+                            </div>
+                        </div>
+                        <button @click="openScheduleModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Schedule Content -->
+                    <div class="space-y-3">
+                        <!-- Card Senin -->
+                        <div class="p-3.5 rounded-xl bg-blue-50/60 border border-blue-100 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-600 text-white text-xs font-black">
+                                    <span>📅 Senin</span>
+                                </span>
+                                <span class="text-[10px] font-semibold text-blue-600">2 Batch Tersedia</span>
+                            </div>
+                            <ul class="space-y-1.5 text-xs text-slate-700 pl-1">
+                                <li class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                    <span><strong>Batch 1:</strong> Ready pukul 11.00 AM</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                    <span><strong>Batch 2:</strong> Ready pukul 03.00 - 04.00 AM</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Card Kamis -->
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-800 text-white text-xs font-black">
+                                    <span>📅 Kamis</span>
+                                </span>
+                                <span class="text-[10px] font-semibold text-slate-500">2 Batch Tersedia</span>
+                            </div>
+                            <ul class="space-y-1.5 text-xs text-slate-700 pl-1">
+                                <li class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
+                                    <span><strong>Batch 1:</strong> Ready pukul 09.00 AM</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
+                                    <span><strong>Batch 2:</strong> Ready pukul 02.00 AM</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Notice / Info footer -->
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500 leading-relaxed">
+                        💡 <em>Semua pesanan diracik fresh dan dingin. Anda dapat mengambil pesanan di stand atau dikirimkan sesuai jam batch di atas.</em>
+                    </div>
+
+                    <!-- Button -->
+                    <button type="button" 
+                            @click="openScheduleModal = false" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-xl transition cursor-pointer shadow-2xs">
+                        Mengerti
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer (Fresh Blue Minimalist) -->
     <footer class="bg-white border-t border-slate-200/90 text-slate-600">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
@@ -625,6 +732,7 @@
         function fruvitApp() {
             return {
                 openCartDrawer: false,
+                openScheduleModal: false,
                 cart: {
                     items: {},
                     count: 0,
