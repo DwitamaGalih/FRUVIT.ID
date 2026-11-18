@@ -4,82 +4,92 @@
 
 @section('content')
 <!-- Hero Section (Fresh Blue Minimalist) -->
-<section class="relative bg-gradient-to-b from-blue-50/70 via-white to-slate-50 pt-6 pb-12 sm:pt-14 sm:pb-20 border-b border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative bg-gradient-to-b from-blue-50/70 via-white to-slate-50 pt-5 pb-8 sm:pt-14 sm:pb-20 border-b border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-12 items-center">
             
-            <!-- Left Hero Content -->
-            <div class="lg:col-span-7 space-y-5 text-left">
+            <!-- Hero Content -->
+            <div class="lg:col-span-7 flex flex-col text-left space-y-3.5 sm:space-y-5">
                 
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-bold tracking-wide">
-                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                    <span>100% Buah Segar • Fresh Fruit, Better Mood!</span>
+                <!-- Badge -->
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-[11px] sm:text-xs font-bold tracking-wide">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                        <span>100% Buah Segar • Fresh Fruit, Better Mood!</span>
+                    </span>
                 </div>
 
-                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
-                    Fresh Fruit,<br class="hidden sm:inline">
-                    <span class="text-blue-600">Better Mood!</span>
-                </h1>
+                <!-- Headline & Subtitle -->
+                <div class="space-y-1.5 sm:space-y-3">
+                    <h1 class="text-2xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight sm:leading-[1.15]">
+                        Fresh Fruit,<br class="hidden sm:inline">
+                        <span class="text-blue-600">Better Mood!</span>
+                    </h1>
 
-                <p class="text-sm sm:text-base text-slate-600 max-w-xl font-normal leading-relaxed">
-                    Nikmati kelezatan <strong>Salad Buah Creamy Cheese</strong> keju melimpah, kesegaran <strong>Susu Jelly</strong> dingin nikmat, dan <strong>Buah Potong</strong> segar higienis. Pesan praktis, cepat, dan higienis.
-                </p>
+                    <p class="text-xs sm:text-base text-slate-600 max-w-xl font-normal leading-relaxed">
+                        Nikmati kelezatan <strong>Salad Buah Creamy Cheese</strong> keju melimpah, kesegaran <strong>Susu Jelly</strong> dingin nikmat, dan <strong>Buah Potong</strong> segar higienis. Pesan praktis, cepat, dan higienis.
+                    </p>
+                </div>
+
+                <!-- Visual Promo Banner for Mobile (Clean, No cluttered overlay) -->
+                <div class="block lg:hidden my-1">
+                    <div class="relative bg-white rounded-2xl p-2 shadow-xs border border-slate-200/80 overflow-hidden">
+                        <div class="relative rounded-xl overflow-hidden aspect-[16/10] bg-slate-100">
+                            <img src="{{ asset('images/banner-promo.jpg') }}" alt="FRUVIT.ID Fresh Fruit" class="w-full h-full object-cover">
+                            
+                            <!-- Clean Tag -->
+                            <div class="absolute top-2.5 left-2.5 bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
+                                <span>OPEN ORDER</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Action CTA Buttons -->
-                <div class="flex flex-wrap items-center gap-3 pt-2">
+                <div class="flex items-center gap-2.5 pt-1">
                     <a href="{{ route('menu.index') }}" 
-                       class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-sm hover:shadow-md transition active:scale-95 cursor-pointer">
+                       class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-5 py-3 sm:py-3.5 rounded-xl shadow-xs hover:shadow-md transition active:scale-95 cursor-pointer">
                         <span>Lihat Menu</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
                     
                     <a href="{{ route('order.track') }}" 
-                       class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs sm:text-sm px-5 py-3.5 rounded-xl transition hover:border-blue-300">
+                       class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs sm:text-sm px-4 py-3 sm:py-3.5 rounded-xl transition hover:border-blue-300">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         <span>Cek Pesanan</span>
                     </a>
                 </div>
 
                 <!-- Trust Strip -->
-                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 max-w-md">
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-3.5 sm:pt-6 border-t border-slate-200/80 max-w-md">
                     <div>
-                        <div class="text-base sm:text-xl font-black text-slate-900">100%</div>
-                        <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Buah Segar Pilihan</div>
+                        <div class="text-sm sm:text-xl font-black text-slate-900">100%</div>
+                        <div class="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Buah Segar Pilihan</div>
                     </div>
                     <div>
-                        <div class="text-base sm:text-xl font-black text-slate-900">Mulai 10k</div>
-                        <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Harga Bersahabat</div>
+                        <div class="text-sm sm:text-xl font-black text-slate-900">Mulai 10k</div>
+                        <div class="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Harga Bersahabat</div>
                     </div>
                     <div>
-                        <div class="text-base sm:text-xl font-black text-slate-900">QRIS / Cash</div>
-                        <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Pickup & Delivery</div>
+                        <div class="text-sm sm:text-xl font-black text-slate-900">QRIS / Cash</div>
+                        <div class="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Pickup & Delivery</div>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Right Hero Visual Promo Card -->
-            <div class="lg:col-span-5 relative">
-                <div class="relative bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 shadow-md border border-slate-200/80 overflow-hidden">
-                    <div class="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-square bg-slate-100">
+            <!-- Right Hero Visual Promo Card (Desktop Only) -->
+            <div class="hidden lg:block lg:col-span-5 relative">
+                <div class="relative bg-white rounded-3xl p-3 shadow-md border border-slate-200/80 overflow-hidden">
+                    <div class="relative rounded-2xl overflow-hidden aspect-square bg-slate-100">
                         <img src="{{ asset('images/banner-promo.jpg') }}" alt="FRUVIT.ID Fresh Fruit" class="w-full h-full object-cover">
                         
                         <!-- Floating Tag -->
-                        <div class="absolute top-3 left-3 bg-blue-600/95 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-xs flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                        <div class="absolute top-3 left-3 bg-blue-600/95 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
                             <span>OPEN ORDER</span>
-                        </div>
-
-                        <!-- Card overlay info -->
-                        <div class="absolute bottom-3 inset-x-3 bg-white/95 backdrop-blur-md rounded-xl p-3 text-slate-800 flex items-center justify-between border border-slate-100 shadow-sm">
-                            <div class="truncate">
-                                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Menu Spesial</span>
-                                <h4 class="text-xs sm:text-sm font-extrabold truncate text-slate-900">Salad Buah • Susu Jelly • Buah Potong</h4>
-                            </div>
-                            <a href="{{ route('menu.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg shrink-0 transition">
-                                Pesan
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -90,46 +100,62 @@
     </div>
 </section>
 
-<!-- Keunggulan Produk Section (Value Propositions - Clean 3 Cards) -->
-<section class="py-10 sm:py-14 bg-white border-b border-slate-200/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!-- Keunggulan Produk Section (Value Propositions - 3 Grid Ke Samping di Mobile & Desktop) -->
+<section class="py-8 sm:py-14 bg-white border-b border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
-        <div class="text-center max-w-xl mx-auto mb-8 sm:mb-12">
-            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Kenapa Memilih Kami</span>
-            <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 mt-1">Keunggulan FRUVIT.ID</h2>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1.5">Kualitas terbaik dengan bahan segar dan proses higienis untuk pengalaman terbaik Anda.</p>
+        <div class="text-center max-w-xl mx-auto mb-6 sm:mb-10">
+            <span class="text-[11px] sm:text-xs font-bold text-blue-600 uppercase tracking-wider">Kenapa Memilih Kami</span>
+            <h2 class="text-lg sm:text-3xl font-extrabold text-slate-900 mt-1">Keunggulan FRUVIT.ID</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Kualitas terbaik dengan bahan segar dan proses higienis untuk pengalaman terbaik Anda.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+        <!-- 3 Grid ke Samping -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-6">
             
-            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-left space-y-3">
-                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold">
+            <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-center sm:text-left flex flex-col items-center sm:items-start justify-between">
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg sm:text-2xl font-bold mb-2 sm:mb-3 shrink-0">
                     🍓
                 </div>
-                <h3 class="text-base font-bold text-slate-900">100% Bahan Alami</h3>
-                <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                    Dipilih dari buah segar berkualitas setiap hari tanpa bahan pengawet berbahaya. Alami, sehat, dan bernutrisi tinggi.
-                </p>
+                <div>
+                    <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-tight">100% Alami</h3>
+                    <p class="text-[10px] sm:text-sm text-slate-500 mt-1 sm:mt-1.5 leading-tight sm:leading-relaxed hidden sm:block">
+                        Dipilih dari buah segar berkualitas setiap hari tanpa bahan pengawet berbahaya.
+                    </p>
+                    <p class="text-[10px] text-slate-500 mt-1 leading-tight sm:hidden">
+                        Buah segar pilihan tanpa pengawet.
+                    </p>
+                </div>
             </div>
 
-            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-left space-y-3">
-                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold">
+            <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-center sm:text-left flex flex-col items-center sm:items-start justify-between">
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg sm:text-2xl font-bold mb-2 sm:mb-3 shrink-0">
                     ❄️
                 </div>
-                <h3 class="text-base font-bold text-slate-900">Pilihan Produk Fresh</h3>
-                <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                    Disimpan dalam suhu dingin higienis agar rasa renyah, manis alami, dan kesegarannya tetap terjaga maksimal hingga di tangan Anda.
-                </p>
+                <div>
+                    <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-tight">Selalu Fresh</h3>
+                    <p class="text-[10px] sm:text-sm text-slate-500 mt-1 sm:mt-1.5 leading-tight sm:leading-relaxed hidden sm:block">
+                        Disimpan dalam suhu dingin higienis agar rasa renyah, manis alami, dan kesegarannya terjaga.
+                    </p>
+                    <p class="text-[10px] text-slate-500 mt-1 leading-tight sm:hidden">
+                        Dingin higienis & terjaga.
+                    </p>
+                </div>
             </div>
 
-            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-left space-y-3">
-                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold">
+            <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-center sm:text-left flex flex-col items-center sm:items-start justify-between">
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg sm:text-2xl font-bold mb-2 sm:mb-3 shrink-0">
                     🛵
                 </div>
-                <h3 class="text-base font-bold text-slate-900">Pemesanan Praktis</h3>
-                <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                    Pesan cepat lewat website, bayar instan pakai QRIS atau Tunai, dan pilih ambil sendiri (Pickup) atau diantar (Delivery).
-                </p>
+                <div>
+                    <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-tight">Pesan Praktis</h3>
+                    <p class="text-[10px] sm:text-sm text-slate-500 mt-1 sm:mt-1.5 leading-tight sm:leading-relaxed hidden sm:block">
+                        Pesan lewat web, bayar QRIS/Cash, bisa Pickup stand atau Delivery kos/kampus.
+                    </p>
+                    <p class="text-[10px] text-slate-500 mt-1 leading-tight sm:hidden">
+                        Pickup stand atau Delivery.
+                    </p>
+                </div>
             </div>
 
         </div>
