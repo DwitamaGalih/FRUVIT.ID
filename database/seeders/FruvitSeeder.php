@@ -163,13 +163,7 @@ class FruvitSeeder extends Seeder
             'wa_admin' => '081234567890',
             'store_address' => 'Stand Kewirausahaan FRUVIT.ID (Area Kampus / Food Court)',
             'delivery_fee' => '5000',
-            'bank_bca_number' => '8420198821',
-            'bank_bca_name' => 'FRUVIT ID - ACHMAD',
-            'bank_mandiri_number' => '1370019283741',
-            'bank_mandiri_name' => 'FRUVIT ID - ACHMAD',
-            'bank_bri_number' => '002101839201509',
-            'bank_bri_name' => 'FRUVIT ID - ACHMAD',
-            'qris_image' => 'images/qris-fruvit.svg',
+            'qris_image' => 'images/qris-fruvit.jpg',
         ];
 
         foreach ($settings as $key => $val) {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - FRUVIT.ID</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo-fruvit.jpg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,9 +15,9 @@
     <div class="max-w-md w-full bg-white rounded-3xl border border-slate-200/90 shadow-xl p-8 space-y-6">
         
         <div class="text-center">
-            <a href="{{ route('home') }}" class="inline-block mb-3">
-                <img src="{{ asset('images/logo.svg') }}" alt="FRUVIT.ID" class="h-12 w-auto mx-auto">
-            </a>
+            <div class="inline-block mb-3">
+                <img src="{{ asset('images/logo-fruvit.jpg') }}" alt="FRUVIT.ID" class="h-14 w-auto mx-auto object-contain">
+            </div>
             <h1 class="text-xl font-black text-slate-900">Portal Pengelola FRUVIT.ID</h1>
             <p class="text-xs text-slate-500 mt-1">Masuk untuk mengelola pesanan, produk, dan konfirmasi pembayaran.</p>
         </div>

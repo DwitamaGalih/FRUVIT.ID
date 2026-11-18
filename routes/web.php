@@ -49,6 +49,7 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::post('/settings', [AdminDashboardController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/laporan/excel', [AdminOrderController::class, 'exportExcel'])->name('reports.excel');
 
     // Orders
     Route::get('/pesanan', [AdminOrderController::class, 'index'])->name('orders.index');

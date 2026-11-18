@@ -49,11 +49,12 @@ class CheckoutController extends Controller
             'delivery_method' => 'required|in:pickup,delivery',
             'shipping_address' => 'nullable|required_if:delivery_method,delivery|string|max:500',
             'notes' => 'nullable|string|max:500',
-            'payment_method' => 'required|in:qris,transfer_bank,cash',
+            'payment_method' => 'required|in:qris,cash',
         ], [
             'customer_name.required' => 'Nama lengkap wajib diisi.',
             'customer_phone.required' => 'Nomor WhatsApp wajib diisi.',
             'shipping_address.required_if' => 'Alamat pengiriman wajib diisi untuk layanan delivery.',
+            'payment_method.in' => 'Metode pembayaran yang dipilih harus QRIS atau Tunai/Cash.',
         ]);
 
         $deliveryFee = $validated['delivery_method'] === 'delivery'
@@ -68,7 +69,6 @@ class CheckoutController extends Controller
         $randomSuffix = strtoupper(Str::random(4));
         $orderNumber = "FRV-{$dateStr}-{$randomSuffix}";
 
-        // If cash was chosen for pickup, payment status remains unpaid until collected
         $initialPaymentStatus = 'unpaid';
 
         $order = DB::transaction(function () use ($validated, $orderNumber, $subtotal, $deliveryFee, $totalAmount, $initialPaymentStatus, $cart) {
@@ -96,6 +96,8 @@ class CheckoutController extends Controller
                     'quantity' => $item['quantity'],
                     'subtotal' => $item['subtotal'],
                     'notes' => $item['notes'] ?? null,
+                    'sugar_level' => $item['sugar_level'] ?? null,
+                    'jelly_topping' => $item['jelly_topping'] ?? null,
                 ]);
             }
 

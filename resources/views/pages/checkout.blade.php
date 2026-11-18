@@ -179,36 +179,23 @@
                                     <input type="radio" name="payment_method" value="qris" x-model="paymentMethod" class="text-emerald-600">
                                     <div>
                                         <div class="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-                                            <span>QRIS Instan</span>
-                                            <span class="bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-md">Otomatis</span>
+                                            <span>QRIS Instan (Scan & Bayar)</span>
+                                            <span class="bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-md">Rekomendasi</span>
                                         </div>
-                                        <div class="text-[10px] text-slate-400">GoPay, OVO, Dana, ShopeePay, m-Banking</div>
+                                        <div class="text-[10px] text-slate-400">GoPay, OVO, Dana, ShopeePay, BCA & Semua m-Banking</div>
                                     </div>
                                 </div>
                                 <span class="text-base sm:text-lg">📲</span>
                             </label>
 
-                            <!-- Transfer Bank -->
-                            <label class="flex items-center justify-between p-3 rounded-xl sm:rounded-2xl border-2 cursor-pointer transition select-none"
-                                   :class="paymentMethod === 'transfer_bank' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 bg-white'">
-                                <div class="flex items-center gap-2.5">
-                                    <input type="radio" name="payment_method" value="transfer_bank" x-model="paymentMethod" class="text-emerald-600">
-                                    <div>
-                                        <div class="text-xs sm:text-sm font-extrabold text-slate-900">Transfer Bank</div>
-                                        <div class="text-[10px] text-slate-400">BCA, Mandiri, BRI (Upload bukti transfer)</div>
-                                    </div>
-                                </div>
-                                <span class="text-base sm:text-lg">💳</span>
-                            </label>
-
-                            <!-- Cash saat Ambil -->
+                            <!-- Cash saat Ambil / COD -->
                             <label class="flex items-center justify-between p-3 rounded-xl sm:rounded-2xl border-2 cursor-pointer transition select-none"
                                    :class="paymentMethod === 'cash' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 bg-white'">
                                 <div class="flex items-center gap-2.5">
                                     <input type="radio" name="payment_method" value="cash" x-model="paymentMethod" class="text-emerald-600">
                                     <div>
-                                        <div class="text-xs sm:text-sm font-extrabold text-slate-900">Tunai / Cash saat Ambil</div>
-                                        <div class="text-[10px] text-slate-400">Bayar di stand saat mengambil pesanan</div>
+                                        <div class="text-xs sm:text-sm font-extrabold text-slate-900">Tunai / Cash saat Ambil (COD)</div>
+                                        <div class="text-[10px] text-slate-400">Bayar langsung di stand saat mengambil pesanan</div>
                                     </div>
                                 </div>
                                 <span class="text-base sm:text-lg">💵</span>
@@ -234,7 +221,17 @@
                                         <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}" class="w-10 h-10 rounded-lg object-cover border border-slate-200 shrink-0">
                                         <div class="min-w-0">
                                             <h4 class="text-[11px] sm:text-xs font-extrabold text-slate-900 truncate">{{ $item['name'] }}</h4>
-                                            <div class="text-[10px] text-slate-400">{{ $item['quantity'] }}x @ Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
+                                            @if(!empty($item['sugar_level']) || !empty($item['jelly_topping']))
+                                                <div class="flex flex-wrap gap-1 mt-0.5">
+                                                    @if(!empty($item['sugar_level']))
+                                                        <span class="inline-block px-1 py-0.2 rounded text-[8px] font-bold bg-amber-100 text-amber-800">{{ $item['sugar_level'] }}</span>
+                                                    @endif
+                                                    @if(!empty($item['jelly_topping']))
+                                                        <span class="inline-block px-1 py-0.2 rounded text-[8px] font-bold bg-purple-100 text-purple-800">{{ $item['jelly_topping'] }}</span>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                            <div class="text-[10px] text-slate-400 mt-0.5">{{ $item['quantity'] }}x @ Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                                     <span class="text-[11px] sm:text-xs font-black text-slate-900 shrink-0">{{ $item['formatted_subtotal'] }}</span>

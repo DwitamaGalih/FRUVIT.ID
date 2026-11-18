@@ -36,12 +36,7 @@ class AdminDashboardController extends Controller
             'wa_admin' => Setting::get('wa_admin', '081234567890'),
             'delivery_fee' => Setting::get('delivery_fee', 5000),
             'store_address' => Setting::get('store_address', 'Stand Kewirausahaan FRUVIT.ID'),
-            'bank_bca_number' => Setting::get('bank_bca_number', '8420198821'),
-            'bank_bca_name' => Setting::get('bank_bca_name', 'FRUVIT ID - ACHMAD'),
-            'bank_mandiri_number' => Setting::get('bank_mandiri_number', '1370019283741'),
-            'bank_mandiri_name' => Setting::get('bank_mandiri_name', 'FRUVIT ID - ACHMAD'),
-            'bank_bri_number' => Setting::get('bank_bri_number', '002101839201509'),
-            'bank_bri_name' => Setting::get('bank_bri_name', 'FRUVIT ID - ACHMAD'),
+            'qris_image' => Setting::get('qris_image', 'images/qris-fruvit.jpg'),
         ];
 
         return view('admin.dashboard', compact('stats', 'recentOrders', 'settings'));
@@ -54,12 +49,6 @@ class AdminDashboardController extends Controller
             'wa_admin' => 'required|string',
             'delivery_fee' => 'required|numeric|min:0',
             'store_address' => 'required|string',
-            'bank_bca_number' => 'nullable|string',
-            'bank_bca_name' => 'nullable|string',
-            'bank_mandiri_number' => 'nullable|string',
-            'bank_mandiri_name' => 'nullable|string',
-            'bank_bri_number' => 'nullable|string',
-            'bank_bri_name' => 'nullable|string',
         ]);
 
         foreach ($validated as $key => $val) {

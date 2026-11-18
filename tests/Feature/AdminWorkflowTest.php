@@ -109,4 +109,26 @@ class AdminWorkflowTest extends TestCase
         $this->product->refresh();
         $this->assertFalse($this->product->is_available);
     }
+
+    public function test_admin_can_export_orders_to_excel(): void
+    {
+        Order::create([
+            'order_number' => 'FRV-EXCEL-001',
+            'customer_name' => 'Fajar Pratama',
+            'customer_phone' => '081299998888',
+            'delivery_method' => 'pickup',
+            'subtotal' => 12500,
+            'delivery_fee' => 0,
+            'total_amount' => 12500,
+            'payment_method' => 'qris',
+            'payment_status' => 'paid',
+            'order_status' => 'completed',
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.reports.excel'));
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('application/vnd.ms-excel', $response->headers->get('Content-Type'));
+        $this->assertStringContainsString('Laporan_Penjualan_FRUVIT_', $response->headers->get('Content-Disposition'));
+    }
 }

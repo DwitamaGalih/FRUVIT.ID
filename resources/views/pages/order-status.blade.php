@@ -162,43 +162,6 @@
                         </div>
                     </div>
 
-                @elseif($order->payment_method === 'transfer_bank')
-                    <!-- BANK TRANSFER DISPLAY -->
-                    <div class="space-y-3">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                            @foreach($bankAccounts as $bank)
-                                <div class="bg-gradient-to-br {{ $bank['color'] }} text-white p-3 rounded-xl shadow-2xs flex justify-between items-center sm:block">
-                                    <div>
-                                        <div class="text-[10px] opacity-80 uppercase tracking-wider">{{ $bank['bank'] }}</div>
-                                        <div class="text-xs sm:text-sm font-black font-mono mt-0.5">{{ $bank['number'] }}</div>
-                                        <div class="text-[9px] opacity-90">a.n {{ $bank['holder'] }}</div>
-                                    </div>
-                                    <button type="button" 
-                                            @click="copyText('{{ $bank['number'] }}')"
-                                            class="sm:mt-2 bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg transition cursor-pointer shrink-0">
-                                        Salin
-                                    </button>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <!-- Upload Proof Form -->
-                        <div class="border border-dashed border-slate-300 rounded-xl p-3 bg-slate-50/70">
-                            <h3 class="text-[11px] font-extrabold text-slate-800 mb-1.5">Upload Bukti Transfer Bank</h3>
-                            <form action="{{ route('order.upload-proof', $order->order_number) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                @csrf
-                                <input type="file" 
-                                       name="payment_proof" 
-                                       required 
-                                       accept="image/*"
-                                       class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-600 file:text-white cursor-pointer">
-                                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs py-2 rounded-xl transition cursor-pointer">
-                                    Kirim Bukti Pembayaran
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
                 @else
                     <!-- CASH / COD DISPLAY -->
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900 text-xs">
@@ -232,7 +195,17 @@
                     <div class="py-2 flex items-center justify-between gap-3">
                         <div class="min-w-0">
                             <h4 class="text-xs font-extrabold text-slate-900 truncate">{{ $item->product_name }}</h4>
-                            <div class="text-[10px] text-slate-400">{{ $item->quantity }}x @ {{ $item->formatted_price }}</div>
+                            @if($item->sugar_level || $item->jelly_topping)
+                                <div class="flex flex-wrap gap-1 mt-0.5">
+                                    @if($item->sugar_level)
+                                        <span class="inline-block px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">{{ $item->sugar_level }}</span>
+                                    @endif
+                                    @if($item->jelly_topping)
+                                        <span class="inline-block px-1.5 py-0.2 rounded text-[9px] font-bold bg-purple-100 text-purple-800 border border-purple-200">{{ $item->jelly_topping }}</span>
+                                    @endif
+                                </div>
+                            @endif
+                            <div class="text-[10px] text-slate-400 mt-0.5">{{ $item->quantity }}x @ {{ $item->formatted_price }}</div>
                             @if($item->notes)
                                 <div class="text-[10px] text-slate-400 italic">"{{ $item->notes }}"</div>
                             @endif

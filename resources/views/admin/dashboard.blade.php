@@ -6,18 +6,22 @@
 <div class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
-        <!-- Welcome Header -->
+        <!-- Welcome Header & Quick Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Dashboard Pengelola FRUVIT.ID</h1>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1">Pantau penjualan, verifikasi pembayaran masuk, dan kelola pesanan pelanggan.</p>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Pantau omset penjualan, verifikasi pembayaran QRIS & Tunai, dan unduh laporan Excel.</p>
             </div>
 
-            <div class="flex items-center gap-3">
-                <a href="{{ route('admin.orders.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition">
+            <div class="flex flex-wrap items-center gap-2.5">
+                <a href="{{ route('admin.reports.excel') }}" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition">
+                    <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Cetak Laporan Excel</span>
+                </a>
+                <a href="{{ route('admin.orders.index') }}" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition">
                     Lihat Semua Pesanan
                 </a>
-                <a href="{{ route('admin.products.create') }}" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition">
+                <a href="{{ route('admin.products.create') }}" class="bg-yellow-400 hover:bg-yellow-500 text-emerald-950 font-black text-xs px-4 py-2.5 rounded-xl shadow-xs transition">
                     + Tambah Produk
                 </a>
             </div>
@@ -55,7 +59,7 @@
                 <div class="text-xl sm:text-2xl font-black text-blue-600 mt-1.5">
                     {{ $stats['processing_orders'] }}
                 </div>
-                <div class="text-[10px] text-slate-500 mt-1">Siap disiapkan di stand</div>
+                <div class="text-[10px] text-slate-500 mt-1">Total produk aktif: {{ $stats['total_products'] }}</div>
             </div>
 
         </div>
@@ -63,26 +67,31 @@
         <!-- Recent Orders Table -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                <h2 class="text-base font-extrabold text-slate-900">Pesanan Terbaru</h2>
-                <a href="{{ route('admin.orders.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700">Lihat Semua &rarr;</a>
+                <div>
+                    <h2 class="text-base font-extrabold text-slate-900">Pesanan Masuk Terbaru</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Daftar transaksi pesanan terakhir di stand FRUVIT.ID</p>
+                </div>
+                <a href="{{ route('admin.orders.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700">
+                    Buka Semua &rarr;
+                </a>
             </div>
 
             @if($recentOrders->isEmpty())
-                <div class="text-center py-8 text-xs text-slate-400">
-                    Belum ada pesanan yang masuk.
+                <div class="text-center py-8 text-slate-400 text-xs">
+                    Belum ada pesanan masuk.
                 </div>
             @else
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-50 text-slate-500 uppercase font-bold text-[10px]">
-                            <tr>
-                                <th class="py-3 px-4 rounded-l-xl">Order ID</th>
-                                <th class="py-3 px-4">Pemesan</th>
-                                <th class="py-3 px-4">Metode</th>
-                                <th class="py-3 px-4">Total</th>
-                                <th class="py-3 px-4">Bayar</th>
-                                <th class="py-3 px-4">Status</th>
-                                <th class="py-3 px-4 rounded-r-xl text-right">Aksi</th>
+                    <table class="w-full text-xs text-left">
+                        <thead>
+                            <tr class="text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                                <th class="pb-3 px-4">No. Order</th>
+                                <th class="pb-3 px-4">Pelanggan</th>
+                                <th class="pb-3 px-4">Metode</th>
+                                <th class="pb-3 px-4">Total</th>
+                                <th class="pb-3 px-4">Bayar</th>
+                                <th class="pb-3 px-4">Status Pesanan</th>
+                                <th class="pb-3 px-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
@@ -128,9 +137,16 @@
 
         <!-- Store Configuration / Settings Form -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs">
-            <div class="pb-4 border-b border-slate-100 mb-6">
-                <h2 class="text-base font-extrabold text-slate-900">Pengaturan Toko & Kontak</h2>
-                <p class="text-xs text-slate-500 mt-0.5">Kelola informasi rekening, nomor WhatsApp admin, dan status operasional stand.</p>
+            <div class="pb-4 border-b border-slate-100 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-base font-extrabold text-slate-900">Pengaturan Stand & Pembayaran</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Kelola nomor WhatsApp admin, tarif ongkir, dan status operasional stand FRUVIT.ID.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-600">Metode Aktif:</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">QRIS</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-blue-100 text-blue-800 border border-blue-300">TUNAI / CASH</span>
+                </div>
             </div>
 
             <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-6">
@@ -155,28 +171,20 @@
                         <input type="number" id="delivery_fee" name="delivery_fee" value="{{ $settings['delivery_fee'] }}" class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-300" required>
                     </div>
 
-                    <div class="sm:col-span-2 lg:col-span-3">
-                        <label for="store_address" class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Lokasi Stand</label>
+                    <div class="sm:col-span-2 lg:col-span-2">
+                        <label for="store_address" class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Lokasi Stand (Pickup)</label>
                         <input type="text" id="store_address" name="store_address" value="{{ $settings['store_address'] }}" class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-300" required>
                     </div>
 
-                    <!-- Bank Accounts -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Rekening BCA</label>
-                        <input type="text" name="bank_bca_number" value="{{ $settings['bank_bca_number'] }}" placeholder="Nomor Rekening" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 mb-1.5">
-                        <input type="text" name="bank_bca_name" value="{{ $settings['bank_bca_name'] }}" placeholder="Atas Nama" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Rekening Mandiri</label>
-                        <input type="text" name="bank_mandiri_number" value="{{ $settings['bank_mandiri_number'] }}" placeholder="Nomor Rekening" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 mb-1.5">
-                        <input type="text" name="bank_mandiri_name" value="{{ $settings['bank_mandiri_name'] }}" placeholder="Atas Nama" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Rekening BRI</label>
-                        <input type="text" name="bank_bri_number" value="{{ $settings['bank_bri_number'] }}" placeholder="Nomor Rekening" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 mb-1.5">
-                        <input type="text" name="bank_bri_name" value="{{ $settings['bank_bri_name'] }}" placeholder="Atas Nama" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Preview QRIS Stand</label>
+                        <div class="flex items-center gap-3 p-2 bg-slate-50 rounded-xl border border-slate-200">
+                            <img src="{{ asset($settings['qris_image']) }}" alt="QRIS" class="w-12 h-12 rounded-lg object-contain bg-white border border-slate-200">
+                            <div class="text-[11px]">
+                                <div class="font-extrabold text-slate-800">QRIS FRUVIT.ID</div>
+                                <div class="text-slate-400 text-[10px]">Aktif untuk semua e-wallet & m-banking</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -42,7 +42,17 @@
                             <div class="py-3 flex items-center justify-between gap-4">
                                 <div>
                                     <h4 class="text-xs sm:text-sm font-extrabold text-slate-900">{{ $item->product_name }}</h4>
-                                    <div class="text-[11px] text-slate-500">{{ $item->quantity }} x {{ $item->formatted_price }}</div>
+                                    @if($item->sugar_level || $item->jelly_topping)
+                                        <div class="flex flex-wrap gap-1 mt-1">
+                                            @if($item->sugar_level)
+                                                <span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">Gula: {{ $item->sugar_level }}</span>
+                                            @endif
+                                            @if($item->jelly_topping)
+                                                <span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-200">Topping: {{ $item->jelly_topping }}</span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                    <div class="text-[11px] text-slate-500 mt-0.5">{{ $item->quantity }} x {{ $item->formatted_price }}</div>
                                     @if($item->notes)
                                         <div class="text-[10px] text-slate-400 italic">"{{ $item->notes }}"</div>
                                     @endif

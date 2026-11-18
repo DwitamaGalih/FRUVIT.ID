@@ -52,6 +52,7 @@ class MenuController extends Controller
             'image_url' => $product->image_url,
             'badge' => $product->badge,
             'category' => $product->category?->name ?? 'Menu',
+            'category_slug' => $product->category?->slug ?? '',
             'stock' => $product->stock,
         ]);
     }

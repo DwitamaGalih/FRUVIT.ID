@@ -130,7 +130,7 @@ class FruvitOrderFlowTest extends TestCase
             'subtotal' => 13000,
             'delivery_fee' => 0,
             'total_amount' => 13000,
-            'payment_method' => 'transfer_bank',
+            'payment_method' => 'qris',
             'payment_status' => 'unpaid',
             'order_status' => 'new',
         ]);
@@ -169,5 +169,59 @@ class FruvitOrderFlowTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('FRV-TRACK-1234');
         $response->assertSee('Dewi Lestari');
+    }
+
+    public function test_susu_jelly_custom_addons_can_be_ordered(): void
+    {
+        $susuJellyCategory = Category::create([
+            'name' => 'Susu Jelly',
+            'slug' => 'susu-jelly',
+            'icon' => '🥤',
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+
+        $susuJelly = Product::create([
+            'category_id' => $susuJellyCategory->id,
+            'name' => 'Susu Jelly Strawberry',
+            'slug' => 'susu-jelly-strawberry',
+            'price' => 12500,
+            'is_available' => true,
+            'stock' => 50,
+        ]);
+
+        // Add to cart with addons: Less sugar, extra jelly
+        $addResponse = $this->postJson(route('cart.add'), [
+            'product_id' => $susuJelly->id,
+            'quantity' => 1,
+            'sugar_level' => 'Less sugar',
+            'jelly_topping' => 'extra jelly',
+            'notes' => 'Tolong dingin ya',
+        ]);
+
+        $addResponse->assertStatus(200);
+        $addResponse->assertJson([
+            'success' => true,
+        ]);
+
+        // Checkout with cash (pickup)
+        $checkoutResponse = $this->post(route('checkout.process'), [
+            'customer_name' => 'Ahmad Dani',
+            'customer_phone' => '081234567899',
+            'delivery_method' => 'pickup',
+            'payment_method' => 'cash',
+        ]);
+
+        $order = Order::where('customer_phone', '081234567899')->first();
+        $this->assertNotNull($order);
+        $this->assertEquals('cash', $order->payment_method);
+        $this->assertEquals(12500, $order->total_amount);
+
+        $orderItem = $order->items->first();
+        $this->assertNotNull($orderItem);
+        $this->assertEquals('Less sugar', $orderItem->sugar_level);
+        $this->assertEquals('extra jelly', $orderItem->jelly_topping);
+
+        $checkoutResponse->assertRedirect(route('order.show', $order->order_number));
     }
 }

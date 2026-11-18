@@ -7,9 +7,55 @@ use App\Models\Order;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminOrderController extends Controller
 {
+    public function exportExcel(Request $request): StreamedResponse
+    {
+        $status = $request->query('status', 'all');
+        $search = $request->query('search', '');
+        $startDate = $request->query('from');
+        $endDate = $request->query('to');
+
+        $query = Order::with('items')->orderBy('created_at', 'desc');
+
+        if ($status !== 'all' && ! empty($status)) {
+            if (in_array($status, ['unpaid', 'pending_verification', 'paid'])) {
+                $query->where('payment_status', $status);
+            } else {
+                $query->where('order_status', $status);
+            }
+        }
+
+        if (! empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhere('customer_name', 'like', "%{$search}%")
+                    ->orWhere('customer_phone', 'like', "%{$search}%");
+            });
+        }
+
+        if (! empty($startDate)) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+        if (! empty($endDate)) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        $orders = $query->get();
+
+        $filename = 'Laporan_Penjualan_FRUVIT_'.now()->format('Ymd_His').'.xls';
+
+        return response()->streamDownload(function () use ($orders) {
+            echo view('admin.exports.orders-excel', compact('orders'))->render();
+        }, $filename, [
+            'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Cache-Control' => 'max-age=0',
+        ]);
+    }
+
     public function index(Request $request): View
     {
         $status = $request->query('status', 'all');

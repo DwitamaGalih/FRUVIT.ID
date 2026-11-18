@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard - FRUVIT.ID')</title>
     
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo-fruvit.jpg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
                 <!-- Logo & Brand -->
                 <div class="flex items-center gap-4">
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
-                        <img src="{{ asset('images/logo.svg') }}" alt="FRUVIT.ID" class="h-8 w-auto bg-white p-1 rounded-lg">
+                        <img src="{{ asset('images/logo-fruvit.jpg') }}" alt="FRUVIT.ID" class="h-9 w-auto bg-white p-0.5 rounded-lg object-contain">
                         <span class="text-xs font-black uppercase tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-md">Admin</span>
                     </a>
                 </div>

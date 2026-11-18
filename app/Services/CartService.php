@@ -19,11 +19,12 @@ class CartService
         $subtotal = 0;
         $count = 0;
 
-        foreach ($cart as $productId => $item) {
+        foreach ($cart as $key => $item) {
+            $productId = $item['product_id'] ?? (is_numeric($key) ? (int) $key : 0);
             $product = Product::find($productId);
             if (! $product || ! $product->is_available) {
                 // Item no longer exists or unavailable, remove from cart
-                unset($cart[$productId]);
+                unset($cart[$key]);
 
                 continue;
             }
@@ -33,7 +34,8 @@ class CartService
             $subtotal += $itemSubtotal;
             $count += $qty;
 
-            $items[$productId] = [
+            $items[$key] = [
+                'cart_key' => (string) $key,
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => (float) $product->price,
@@ -44,6 +46,8 @@ class CartService
                 'image_url' => $product->image_url,
                 'badge' => $product->badge,
                 'notes' => $item['notes'] ?? '',
+                'sugar_level' => $item['sugar_level'] ?? null,
+                'jelly_topping' => $item['jelly_topping'] ?? null,
                 'category_name' => $product->category?->name ?? 'Menu',
             ];
         }
@@ -59,10 +63,15 @@ class CartService
     }
 
     /**
-     * Add product to cart
+     * Add product to cart with optional addons
      */
-    public function add(int $productId, int $quantity = 1, ?string $notes = null): array
-    {
+    public function add(
+        int $productId,
+        int $quantity = 1,
+        ?string $notes = null,
+        ?string $sugarLevel = null,
+        ?string $jellyTopping = null
+    ): array {
         $product = Product::findOrFail($productId);
         if (! $product->is_available) {
             throw new \Exception("Produk {$product->name} saat ini sedang habis.");
@@ -70,16 +79,31 @@ class CartService
 
         $cart = Session::get(self::SESSION_KEY, []);
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] += $quantity;
+        // Unique key for product + add-on configuration
+        $key = (string) $productId;
+        if ($sugarLevel || $jellyTopping) {
+            $addonSlug = substr(md5(($sugarLevel ?? '').'_'.($jellyTopping ?? '').'_'.($notes ?? '')), 0, 6);
+            $key = "{$productId}_{$addonSlug}";
+        }
+
+        if (isset($cart[$key])) {
+            $cart[$key]['quantity'] += $quantity;
             if ($notes !== null) {
-                $cart[$productId]['notes'] = $notes;
+                $cart[$key]['notes'] = $notes;
+            }
+            if ($sugarLevel !== null) {
+                $cart[$key]['sugar_level'] = $sugarLevel;
+            }
+            if ($jellyTopping !== null) {
+                $cart[$key]['jelly_topping'] = $jellyTopping;
             }
         } else {
-            $cart[$productId] = [
+            $cart[$key] = [
                 'product_id' => $product->id,
                 'quantity' => max(1, $quantity),
                 'notes' => $notes ?? '',
+                'sugar_level' => $sugarLevel,
+                'jelly_topping' => $jellyTopping,
             ];
         }
 
@@ -91,16 +115,17 @@ class CartService
     /**
      * Update quantity of an item
      */
-    public function update(int $productId, int $quantity, ?string $notes = null): array
+    public function update(string|int $cartKey, int $quantity, ?string $notes = null): array
     {
         $cart = Session::get(self::SESSION_KEY, []);
+        $key = (string) $cartKey;
 
         if ($quantity <= 0) {
-            unset($cart[$productId]);
-        } elseif (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = $quantity;
+            unset($cart[$key]);
+        } elseif (isset($cart[$key])) {
+            $cart[$key]['quantity'] = $quantity;
             if ($notes !== null) {
-                $cart[$productId]['notes'] = $notes;
+                $cart[$key]['notes'] = $notes;
             }
         }
 
@@ -112,10 +137,10 @@ class CartService
     /**
      * Remove an item from cart
      */
-    public function remove(int $productId): array
+    public function remove(string|int $cartKey): array
     {
         $cart = Session::get(self::SESSION_KEY, []);
-        unset($cart[$productId]);
+        unset($cart[(string) $cartKey]);
         Session::put(self::SESSION_KEY, $cart);
 
         return $this->getCart();

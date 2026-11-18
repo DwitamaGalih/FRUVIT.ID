@@ -7,7 +7,7 @@
     <title>@yield('title', 'FRUVIT.ID - Segar Buahnya, Nikmat Rasanya | Pesan Online Salad Buah & Susu Jelly')</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo-fruvit.jpg') }}">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,10 +38,6 @@
                     <span class="hidden sm:inline">Lacak Pesanan</span>
                     <span class="sm:hidden">Lacak</span>
                 </a>
-                <span class="text-emerald-500">|</span>
-                <a href="{{ route('admin.login') }}" class="hover:text-yellow-300 transition text-[10px] font-medium opacity-80">
-                    Admin
-                </a>
             </div>
         </div>
     </div>
@@ -54,7 +50,7 @@
                 <!-- Brand Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}" class="flex items-center gap-1.5 group">
-                        <img src="{{ asset('images/logo.svg') }}" alt="FRUVIT.ID" class="h-8 sm:h-11 w-auto transition-transform group-hover:scale-105 duration-200">
+                        <img src="{{ asset('images/logo-fruvit.jpg') }}" alt="FRUVIT.ID" class="h-9 sm:h-12 w-auto object-contain rounded-lg transition-transform group-hover:scale-105 duration-200">
                     </a>
                 </div>
 
@@ -297,17 +293,26 @@
                                         <div class="flex-1 min-w-0">
                                             <h4 class="text-xs font-bold text-slate-800 truncate" x-text="item.name"></h4>
                                             <div class="text-xs font-extrabold text-emerald-600 mt-0.5" x-text="item.formatted_price"></div>
-                                            <div class="text-[10px] text-slate-500 truncate" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
+                                            
+                                            <!-- Addon badges (Susu Jelly) -->
+                                            <template x-if="item.sugar_level || item.jelly_topping">
+                                                <div class="flex flex-wrap gap-1 mt-1">
+                                                    <span x-show="item.sugar_level" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200" x-text="item.sugar_level"></span>
+                                                    <span x-show="item.jelly_topping" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-purple-100 text-purple-800 border border-purple-200" x-text="item.jelly_topping"></span>
+                                                </div>
+                                            </template>
+
+                                            <div class="text-[10px] text-slate-500 truncate mt-0.5" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
                                             
                                             <!-- Qty control -->
                                             <div class="flex items-center gap-1.5 mt-1.5">
-                                                <button @click="updateCartQty(item.id, item.quantity - 1)" 
+                                                <button @click="updateCartQty(item.cart_key || item.id, item.quantity - 1)" 
                                                         type="button" 
                                                         class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-white border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 font-bold text-xs transition cursor-pointer">
                                                     -
                                                 </button>
                                                 <span class="text-xs font-bold px-1 text-slate-800" x-text="item.quantity"></span>
-                                                <button @click="updateCartQty(item.id, item.quantity + 1)" 
+                                                <button @click="updateCartQty(item.cart_key || item.id, item.quantity + 1)" 
                                                         type="button" 
                                                         class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center hover:bg-emerald-700 font-bold text-xs transition cursor-pointer">
                                                     +
@@ -315,7 +320,7 @@
                                             </div>
                                         </div>
                                         <div class="text-right flex flex-col justify-between items-end h-14 sm:h-16">
-                                            <button @click="removeFromCart(item.id)" type="button" class="text-slate-400 hover:text-rose-600 transition p-0.5" title="Hapus">
+                                            <button @click="removeFromCart(item.cart_key || item.id)" type="button" class="text-slate-400 hover:text-rose-600 transition p-0.5" title="Hapus">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             </button>
                                             <div class="text-xs font-bold text-slate-900" x-text="item.formatted_subtotal"></div>
@@ -399,6 +404,75 @@
 
                         <p class="text-xs text-slate-600 mt-2 leading-relaxed" x-text="productModal.item.description"></p>
 
+                        <!-- Susu Jelly Add-on Section (Sugar Level & Topping Jelly) -->
+                        <template x-if="productModal.item.category_slug === 'susu-jelly'">
+                            <div class="mt-4 p-3 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 space-y-3.5">
+                                
+                                <!-- Sugar Level Selection -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <label class="text-[11px] font-black text-slate-800 flex items-center gap-1">
+                                            <span>🍯 Sugar Level:</span>
+                                            <span class="text-emerald-700 font-extrabold" x-text="productModal.sugarLevel"></span>
+                                        </label>
+                                        <span class="text-[10px] font-bold text-slate-400">Pilih tingkat manis</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-1.5">
+                                        <button type="button"
+                                                @click="productModal.sugarLevel = 'Less sugar'"
+                                                class="py-2 px-1 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer select-none active:scale-95"
+                                                :class="productModal.sugarLevel === 'Less sugar' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            Less sugar
+                                        </button>
+                                        <button type="button"
+                                                @click="productModal.sugarLevel = 'Normal sugar'"
+                                                class="py-2 px-1 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer select-none active:scale-95"
+                                                :class="productModal.sugarLevel === 'Normal sugar' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            Normal sugar
+                                        </button>
+                                        <button type="button"
+                                                @click="productModal.sugarLevel = 'extra sugar'"
+                                                class="py-2 px-1 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer select-none active:scale-95"
+                                                :class="productModal.sugarLevel === 'extra sugar' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            extra sugar
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Topping Jelly Selection -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <label class="text-[11px] font-black text-slate-800 flex items-center gap-1">
+                                            <span>🧋 Topping Jelly:</span>
+                                            <span class="text-purple-700 font-extrabold" x-text="productModal.jellyTopping"></span>
+                                        </label>
+                                        <span class="text-[10px] font-bold text-slate-400">Pilih varian topping</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-1.5">
+                                        <button type="button"
+                                                @click="productModal.jellyTopping = 'Tanpa jelly'"
+                                                class="py-2 px-1 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer select-none active:scale-95"
+                                                :class="productModal.jellyTopping === 'Tanpa jelly' ? 'bg-purple-600 text-white border-purple-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            Tanpa jelly
+                                        </button>
+                                        <button type="button"
+                                                @click="productModal.jellyTopping = 'Normal jelly'"
+                                                class="py-2 px-1 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer select-none active:scale-95"
+                                                :class="productModal.jellyTopping === 'Normal jelly' ? 'bg-purple-600 text-white border-purple-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            Normal jelly
+                                        </button>
+                                        <button type="button"
+                                                @click="productModal.jellyTopping = 'extra jelly'"
+                                                class="py-2 px-1 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer select-none active:scale-95"
+                                                :class="productModal.jellyTopping === 'extra jelly' ? 'bg-purple-600 text-white border-purple-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            extra jelly
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </template>
+
                         <!-- Notes / Special request -->
                         <div class="mt-4">
                             <label class="block text-[11px] font-bold text-slate-700 mb-1">Catatan Khusus (Opsional)</label>
@@ -454,7 +528,7 @@
                 <!-- Col 1: Brand Info -->
                 <div class="md:col-span-2 space-y-3">
                     <div class="flex items-center gap-2">
-                        <img src="{{ asset('images/logo.svg') }}" alt="FRUVIT.ID" class="h-9 w-auto bg-white p-1 rounded-xl">
+                        <img src="{{ asset('images/logo-fruvit.jpg') }}" alt="FRUVIT.ID" class="h-10 w-auto bg-white p-0.5 rounded-xl object-contain">
                     </div>
                     <p class="text-xs text-slate-400 max-w-md leading-relaxed">
                         FRUVIT.ID merupakan produk kewirausahaan mahasiswa: Salad Buah keju melimpah, Susu Jelly varian nikmat, dan Buah Potong segar dingin.
@@ -473,7 +547,6 @@
                         <li><a href="{{ route('menu.index') }}" class="hover:text-yellow-400 transition">Daftar Menu</a></li>
                         <li><a href="{{ route('cart.index') }}" class="hover:text-yellow-400 transition">Keranjang Belanja</a></li>
                         <li><a href="{{ route('order.track') }}" class="hover:text-yellow-400 transition">Lacak Pesanan</a></li>
-                        <li><a href="{{ route('admin.login') }}" class="text-slate-500 hover:text-slate-400 transition">Portal Admin</a></li>
                     </ul>
                 </div>
 
@@ -491,7 +564,7 @@
                         </li>
                         <li class="flex items-center gap-2">
                             <span>💳</span>
-                            <span>QRIS, BCA, Mandiri, BRI, Tunai</span>
+                            <span>QRIS Instan & Tunai / Cash</span>
                         </li>
                     </ul>
                 </div>
@@ -519,6 +592,8 @@
                     open: false,
                     qty: 1,
                     notes: '',
+                    sugarLevel: 'Normal sugar',
+                    jellyTopping: 'Normal jelly',
                     item: {}
                 },
                 toast: {
@@ -577,6 +652,8 @@
                             this.productModal.item = data;
                             this.productModal.qty = 1;
                             this.productModal.notes = '';
+                            this.productModal.sugarLevel = 'Normal sugar';
+                            this.productModal.jellyTopping = 'Normal jelly';
                             this.productModal.open = true;
                         })
                         .catch(err => console.error(err));
@@ -587,6 +664,7 @@
                 },
 
                 submitModalToCart() {
+                    const isSusuJelly = this.productModal.item.category_slug === 'susu-jelly';
                     fetch('{{ route('cart.add') }}', {
                         method: 'POST',
                         headers: {
@@ -597,7 +675,9 @@
                         body: JSON.stringify({
                             product_id: this.productModal.item.id,
                             quantity: this.productModal.qty,
-                            notes: this.productModal.notes
+                            notes: this.productModal.notes,
+                            sugar_level: isSusuJelly ? this.productModal.sugarLevel : null,
+                            jelly_topping: isSusuJelly ? this.productModal.jellyTopping : null
                         })
                     })
                     .then(res => res.json())
@@ -611,7 +691,7 @@
                     .catch(err => console.error(err));
                 },
 
-                updateCartQty(productId, newQty) {
+                updateCartQty(cartKey, newQty) {
                     fetch('{{ route('cart.update') }}', {
                         method: 'POST',
                         headers: {
@@ -620,7 +700,8 @@
                             'Accept': 'application/json'
                         },
                         body: JSON.stringify({
-                            product_id: productId,
+                            cart_key: cartKey,
+                            product_id: cartKey,
                             quantity: newQty
                         })
                     })
@@ -633,7 +714,7 @@
                     .catch(err => console.error(err));
                 },
 
-                removeFromCart(productId) {
+                removeFromCart(cartKey) {
                     fetch('{{ route('cart.remove') }}', {
                         method: 'POST',
                         headers: {
@@ -642,7 +723,8 @@
                             'Accept': 'application/json'
                         },
                         body: JSON.stringify({
-                            product_id: productId
+                            cart_key: cartKey,
+                            product_id: cartKey
                         })
                     })
                     .then(res => res.json())

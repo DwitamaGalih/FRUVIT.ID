@@ -18,6 +18,8 @@ class OrderItem extends Model
         'quantity',
         'subtotal',
         'notes',
+        'sugar_level',
+        'jelly_topping',
     ];
 
     protected $casts = [

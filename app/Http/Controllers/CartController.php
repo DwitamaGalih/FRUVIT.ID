@@ -34,12 +34,22 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'nullable|integer|min:1',
             'notes' => 'nullable|string|max:255',
+            'sugar_level' => 'nullable|string|max:50',
+            'jelly_topping' => 'nullable|string|max:50',
         ]);
 
         $quantity = $validated['quantity'] ?? 1;
         $notes = $validated['notes'] ?? null;
+        $sugarLevel = $validated['sugar_level'] ?? null;
+        $jellyTopping = $validated['jelly_topping'] ?? null;
 
-        $cart = $this->cartService->add((int) $validated['product_id'], $quantity, $notes);
+        $cart = $this->cartService->add(
+            (int) $validated['product_id'],
+            $quantity,
+            $notes,
+            $sugarLevel,
+            $jellyTopping
+        );
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -55,13 +65,16 @@ class CartController extends Controller
     public function update(Request $request): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'cart_key' => 'nullable|string',
+            'product_id' => 'nullable',
             'quantity' => 'required|integer|min:0',
             'notes' => 'nullable|string|max:255',
         ]);
 
+        $cartKey = $validated['cart_key'] ?? $validated['product_id'];
+
         $cart = $this->cartService->update(
-            (int) $validated['product_id'],
+            $cartKey,
             (int) $validated['quantity'],
             $validated['notes'] ?? null
         );
@@ -79,10 +92,13 @@ class CartController extends Controller
     public function remove(Request $request): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'cart_key' => 'nullable|string',
+            'product_id' => 'nullable',
         ]);
 
-        $cart = $this->cartService->remove((int) $validated['product_id']);
+        $cartKey = $validated['cart_key'] ?? $validated['product_id'];
+
+        $cart = $this->cartService->remove($cartKey);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([

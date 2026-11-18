@@ -129,7 +129,12 @@ class Order extends Model
 
         $itemsSummary = '';
         foreach ($this->items as $item) {
-            $itemsSummary .= "- {$item->product_name} ({$item->quantity}x) = Rp ".number_format((float) $item->subtotal, 0, ',', '.')."\n";
+            $addonInfo = '';
+            if ($item->sugar_level || $item->jelly_topping) {
+                $addons = array_filter([$item->sugar_level, $item->jelly_topping]);
+                $addonInfo = ' ['.implode(', ', $addons).']';
+            }
+            $itemsSummary .= "- {$item->product_name}{$addonInfo} ({$item->quantity}x) = Rp ".number_format((float) $item->subtotal, 0, ',', '.')."\n";
         }
 
         $msg = "Halo Admin FRUVIT.ID,\n\n";

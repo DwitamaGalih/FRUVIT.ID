@@ -63,7 +63,16 @@
                                             <span class="text-[9px] sm:text-[10px] font-bold text-emerald-600 uppercase" x-text="item.category_name"></span>
                                             <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 truncate" x-text="item.name"></h3>
                                             <div class="text-[11px] sm:text-xs font-black text-emerald-600 mt-0.5" x-text="item.formatted_price"></div>
-                                            <div class="text-[10px] text-slate-400 italic truncate" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
+                                            
+                                            <!-- Add-ons (Sugar Level & Jelly Topping) -->
+                                            <template x-if="item.sugar_level || item.jelly_topping">
+                                                <div class="flex flex-wrap gap-1 mt-1">
+                                                    <span x-show="item.sugar_level" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200" x-text="item.sugar_level"></span>
+                                                    <span x-show="item.jelly_topping" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-bold bg-purple-100 text-purple-800 border border-purple-200" x-text="item.jelly_topping"></span>
+                                                </div>
+                                            </template>
+
+                                            <div class="text-[10px] text-slate-400 italic truncate mt-0.5" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
                                         </div>
                                     </div>
 
@@ -71,13 +80,13 @@
                                     <div class="flex items-center gap-2 sm:gap-5 shrink-0">
                                         <!-- Qty Button Group -->
                                         <div class="flex items-center bg-white border border-slate-300 rounded-lg sm:rounded-xl p-0.5 shadow-2xs">
-                                            <button @click="updateCartQty(item.id, item.quantity - 1)" 
+                                            <button @click="updateCartQty(item.cart_key || item.id, item.quantity - 1)" 
                                                     type="button" 
                                                     class="w-5 h-5 sm:w-7 sm:h-7 rounded text-slate-700 font-black hover:bg-slate-100 flex items-center justify-center transition cursor-pointer text-[11px] sm:text-xs">
                                                 -
                                             </button>
                                             <span class="w-6 sm:w-8 text-center text-xs font-black text-slate-900" x-text="item.quantity"></span>
-                                            <button @click="updateCartQty(item.id, item.quantity + 1)" 
+                                            <button @click="updateCartQty(item.cart_key || item.id, item.quantity + 1)" 
                                                     type="button" 
                                                     class="w-5 h-5 sm:w-7 sm:h-7 rounded bg-emerald-600 text-white font-black hover:bg-emerald-700 flex items-center justify-center transition cursor-pointer text-[11px] sm:text-xs">
                                                 +
@@ -85,10 +94,10 @@
                                         </div>
 
                                         <div class="text-right">
-                                            <div class="text-xs sm:text-sm font-black text-slate-900" x-text="item.formatted_subtotal"></div>
+                                             <div class="text-xs sm:text-sm font-black text-slate-900" x-text="item.formatted_subtotal"></div>
                                         </div>
 
-                                        <button @click="removeFromCart(item.id)" 
+                                        <button @click="removeFromCart(item.cart_key || item.id)" 
                                                 type="button" 
                                                 class="text-slate-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-50 transition cursor-pointer"
                                                 title="Hapus">

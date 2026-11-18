@@ -15,32 +15,11 @@ class OrderController extends Controller
     {
         $order = Order::with('items')->where('order_number', $orderNumber)->firstOrFail();
 
-        $bankAccounts = [
-            'bca' => [
-                'bank' => 'Bank BCA',
-                'number' => Setting::get('bank_bca_number', '8420198821'),
-                'holder' => Setting::get('bank_bca_name', 'FRUVIT ID - ACHMAD'),
-                'color' => 'from-blue-600 to-blue-800',
-            ],
-            'mandiri' => [
-                'bank' => 'Bank Mandiri',
-                'number' => Setting::get('bank_mandiri_number', '1370019283741'),
-                'holder' => Setting::get('bank_mandiri_name', 'FRUVIT ID - ACHMAD'),
-                'color' => 'from-amber-600 to-yellow-800',
-            ],
-            'bri' => [
-                'bank' => 'Bank BRI',
-                'number' => Setting::get('bank_bri_number', '002101839201509'),
-                'holder' => Setting::get('bank_bri_name', 'FRUVIT ID - ACHMAD'),
-                'color' => 'from-sky-700 to-blue-900',
-            ],
-        ];
-
-        $qrisImage = Setting::get('qris_image', 'images/qris-fruvit.svg');
+        $qrisImage = Setting::get('qris_image', 'images/qris-fruvit.jpg');
         $waAdmin = Setting::get('wa_admin', '081234567890');
         $storeAddress = Setting::get('store_address', 'Stand Kewirausahaan FRUVIT.ID');
 
-        return view('pages.order-status', compact('order', 'bankAccounts', 'qrisImage', 'waAdmin', 'storeAddress'));
+        return view('pages.order-status', compact('order', 'qrisImage', 'waAdmin', 'storeAddress'));
     }
 
     public function uploadProof(Request $request, string $orderNumber): RedirectResponse
