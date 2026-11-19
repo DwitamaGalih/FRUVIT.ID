@@ -70,11 +70,7 @@
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
-                        <span class="hidden sm:inline font-bold">Keranjang</span>
-                        <span x-text="cart.count" 
-                              class="inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] sm:text-xs font-black bg-blue-600 text-white rounded-full shadow-2xs min-w-[20px]">
-                            0
-                        </span>
+                        <span class="font-bold">Keranjang</span>
                     </button>
 
                     <!-- CTA Button Pesan Sekarang (Desktop) -->
@@ -192,14 +188,10 @@
             <button @click="openCartDrawer = true" 
                     type="button"
                     class="relative flex flex-col items-center py-1 transition text-slate-500 hover:text-slate-800 font-medium cursor-pointer">
-                <div class="relative">
+                <div>
                     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                     </svg>
-                    <span x-show="cart.count > 0" 
-                          x-text="cart.count" 
-                          class="absolute -top-1.5 -right-2 bg-blue-600 text-white font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center">
-                    </span>
                 </div>
                 <span class="text-[10px] mt-0.5">Keranjang</span>
             </button>
@@ -325,13 +317,18 @@
                                         <h4 class="text-xs sm:text-sm font-bold text-slate-900 truncate" x-text="item.name"></h4>
                                         <div class="text-xs font-extrabold text-blue-600 mt-0.5" x-text="item.formatted_price"></div>
                                         
-                                        <!-- Addon badges (Susu Jelly) -->
-                                        <template x-if="item.sugar_level || item.jelly_topping">
-                                            <div class="flex flex-wrap gap-1 mt-1">
-                                                <span x-show="item.sugar_level" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/70" x-text="item.sugar_level"></span>
-                                                <span x-show="item.jelly_topping" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-slate-100 text-slate-700 border border-slate-200" x-text="item.jelly_topping"></span>
-                                            </div>
-                                        </template>
+                                        <!-- Add-on & Jadwal Badges -->
+                                        <div class="flex flex-wrap gap-1 mt-1">
+                                            <template x-if="item.pickup_day && item.pickup_batch">
+                                                <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-blue-100 text-blue-800 border border-blue-200" x-text="`📅 ${item.pickup_day} • ${item.pickup_batch}`"></span>
+                                            </template>
+                                            <template x-if="item.sugar_level">
+                                                <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/70" x-text="item.sugar_level"></span>
+                                            </template>
+                                            <template x-if="item.jelly_topping">
+                                                <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-slate-100 text-slate-700 border border-slate-200" x-text="item.jelly_topping"></span>
+                                            </template>
+                                        </div>
 
                                         <div class="text-[10px] text-slate-400 italic truncate mt-0.5" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
                                         
@@ -445,16 +442,56 @@
 
                         <p class="text-xs text-slate-500 leading-relaxed" x-text="productModal.item.description"></p>
 
-                        <!-- Button Info Jadwal Pengambilan -->
-                        <button type="button" 
-                                @click="openScheduleModal = true" 
-                                class="w-full flex items-center justify-between p-2.5 rounded-xl bg-blue-50/70 border border-blue-100 text-blue-700 text-xs font-bold hover:bg-blue-100 transition cursor-pointer">
-                            <div class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>Lihat Jadwal Pengambilan</span>
+                        <!-- Jadwal Pengambilan Add-on Selection (Senin / Kamis & Batch 1 / Batch 2) -->
+                        <div class="p-3.5 bg-blue-50/60 rounded-xl border border-blue-100 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>Jadwal Pengambilan</span>
+                                </span>
+                                <span class="text-[10px] text-blue-600 font-semibold" x-text="`${productModal.pickupDay} • ${productModal.pickupBatch}`"></span>
                             </div>
-                            <span class="text-[10px] text-blue-600 font-semibold underline">Senin & Kamis &rarr;</span>
-                        </button>
+
+                            <!-- Pilihan Hari: Senin / Kamis -->
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-600 block mb-1.5">Pilih Hari:</label>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <button type="button"
+                                            @click="productModal.pickupDay = 'Senin'"
+                                            class="py-2 px-2 rounded-lg text-[11px] font-bold border transition text-center cursor-pointer select-none flex items-center justify-center gap-1.5"
+                                            :class="productModal.pickupDay === 'Senin' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                        <span>📅 Senin</span>
+                                    </button>
+                                    <button type="button"
+                                            @click="productModal.pickupDay = 'Kamis'"
+                                            class="py-2 px-2 rounded-lg text-[11px] font-bold border transition text-center cursor-pointer select-none flex items-center justify-center gap-1.5"
+                                            :class="productModal.pickupDay === 'Kamis' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                        <span>📅 Kamis</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Pilihan Batch Jam Pengambilan -->
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-600 block mb-1.5">Pilih Jam / Batch:</label>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <button type="button"
+                                            @click="productModal.pickupBatch = 'Batch 1'"
+                                            class="p-2 rounded-lg text-left border transition cursor-pointer select-none"
+                                            :class="productModal.pickupBatch === 'Batch 1' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                        <div class="text-[11px] font-bold">Batch 1</div>
+                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 1' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? 'Pukul 11.00 AM' : 'Pukul 09.00 AM'"></div>
+                                    </button>
+                                    <button type="button"
+                                            @click="productModal.pickupBatch = 'Batch 2'"
+                                            class="p-2 rounded-lg text-left border transition cursor-pointer select-none"
+                                            :class="productModal.pickupBatch === 'Batch 2' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                        <div class="text-[11px] font-bold">Batch 2</div>
+                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? '03.00-04.00 AM' : 'Pukul 02.00 AM'"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Susu Jelly Add-on Section (Sugar Level & Topping Jelly) -->
                         <template x-if="productModal.item.category_slug === 'susu-jelly'">
@@ -745,6 +782,8 @@
                     notes: '',
                     sugarLevel: 'Normal sugar',
                     jellyTopping: 'Normal jelly',
+                    pickupDay: 'Senin',
+                    pickupBatch: 'Batch 1',
                     item: {}
                 },
                 toast: {
@@ -786,6 +825,8 @@
                             this.productModal.notes = '';
                             this.productModal.sugarLevel = 'Normal sugar';
                             this.productModal.jellyTopping = 'Normal jelly';
+                            this.productModal.pickupDay = 'Senin';
+                            this.productModal.pickupBatch = 'Batch 1';
                             this.productModal.open = true;
                         })
                         .catch(err => console.error(err));
@@ -809,7 +850,9 @@
                             quantity: this.productModal.qty,
                             notes: this.productModal.notes,
                             sugar_level: isSusuJelly ? this.productModal.sugarLevel : null,
-                            jelly_topping: isSusuJelly ? this.productModal.jellyTopping : null
+                            jelly_topping: isSusuJelly ? this.productModal.jellyTopping : null,
+                            pickup_day: this.productModal.pickupDay,
+                            pickup_batch: this.productModal.pickupBatch
                         })
                     })
                     .then(res => res.json())

@@ -48,6 +48,8 @@ class CartService
                 'notes' => $item['notes'] ?? '',
                 'sugar_level' => $item['sugar_level'] ?? null,
                 'jelly_topping' => $item['jelly_topping'] ?? null,
+                'pickup_day' => $item['pickup_day'] ?? null,
+                'pickup_batch' => $item['pickup_batch'] ?? null,
                 'category_name' => $product->category?->name ?? 'Menu',
             ];
         }
@@ -70,7 +72,9 @@ class CartService
         int $quantity = 1,
         ?string $notes = null,
         ?string $sugarLevel = null,
-        ?string $jellyTopping = null
+        ?string $jellyTopping = null,
+        ?string $pickupDay = null,
+        ?string $pickupBatch = null
     ): array {
         $product = Product::findOrFail($productId);
         if (! $product->is_available) {
@@ -79,10 +83,10 @@ class CartService
 
         $cart = Session::get(self::SESSION_KEY, []);
 
-        // Unique key for product + add-on configuration
+        // Unique key for product + add-on configuration + pickup schedule
         $key = (string) $productId;
-        if ($sugarLevel || $jellyTopping) {
-            $addonSlug = substr(md5(($sugarLevel ?? '').'_'.($jellyTopping ?? '').'_'.($notes ?? '')), 0, 6);
+        if ($sugarLevel || $jellyTopping || $pickupDay || $pickupBatch) {
+            $addonSlug = substr(md5(($sugarLevel ?? '').'_'.($jellyTopping ?? '').'_'.($pickupDay ?? '').'_'.($pickupBatch ?? '').'_'.($notes ?? '')), 0, 6);
             $key = "{$productId}_{$addonSlug}";
         }
 
@@ -97,6 +101,12 @@ class CartService
             if ($jellyTopping !== null) {
                 $cart[$key]['jelly_topping'] = $jellyTopping;
             }
+            if ($pickupDay !== null) {
+                $cart[$key]['pickup_day'] = $pickupDay;
+            }
+            if ($pickupBatch !== null) {
+                $cart[$key]['pickup_batch'] = $pickupBatch;
+            }
         } else {
             $cart[$key] = [
                 'product_id' => $product->id,
@@ -104,6 +114,8 @@ class CartService
                 'notes' => $notes ?? '',
                 'sugar_level' => $sugarLevel,
                 'jelly_topping' => $jellyTopping,
+                'pickup_day' => $pickupDay,
+                'pickup_batch' => $pickupBatch,
             ];
         }
 

@@ -88,13 +88,18 @@
                                             <h3 class="text-xs sm:text-sm font-bold text-slate-900 truncate" x-text="item.name"></h3>
                                             <div class="text-xs sm:text-sm font-black text-blue-600 mt-0.5" x-text="item.formatted_price"></div>
                                             
-                                            <!-- Add-ons (Sugar Level & Jelly Topping) -->
-                                            <template x-if="item.sugar_level || item.jelly_topping">
-                                                <div class="flex flex-wrap gap-1 mt-1">
-                                                    <span x-show="item.sugar_level" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/70" x-text="item.sugar_level"></span>
-                                                    <span x-show="item.jelly_topping" class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-slate-100 text-slate-700 border border-slate-200" x-text="item.jelly_topping"></span>
-                                                </div>
-                                            </template>
+                                            <!-- Add-ons & Pickup Schedule -->
+                                            <div class="flex flex-wrap gap-1 mt-1">
+                                                <template x-if="item.pickup_day && item.pickup_batch">
+                                                    <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-blue-100 text-blue-800 border border-blue-200" x-text="`📅 ${item.pickup_day} • ${item.pickup_batch}`"></span>
+                                                </template>
+                                                <template x-if="item.sugar_level">
+                                                    <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/70" x-text="item.sugar_level"></span>
+                                                </template>
+                                                <template x-if="item.jelly_topping">
+                                                    <span class="inline-flex items-center px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-slate-100 text-slate-700 border border-slate-200" x-text="item.jelly_topping"></span>
+                                                </template>
+                                            </div>
 
                                             <div class="text-[10px] text-slate-400 italic truncate mt-0.5" x-show="item.notes" x-text="'Catatan: ' + item.notes"></div>
                                         </div>

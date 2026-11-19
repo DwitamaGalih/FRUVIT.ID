@@ -20,6 +20,8 @@ class OrderItem extends Model
         'notes',
         'sugar_level',
         'jelly_topping',
+        'pickup_day',
+        'pickup_batch',
     ];
 
     protected $casts = [

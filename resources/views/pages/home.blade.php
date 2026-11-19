@@ -216,16 +216,6 @@
                             <p class="text-[11px] text-slate-400 mt-1 line-clamp-1 leading-relaxed">
                                 {{ $product->description }}
                             </p>
-
-                            <!-- Button Jadwal Pengambilan -->
-                            <div class="mt-2">
-                                <button type="button" 
-                                        @click.stop="openScheduleModal = true" 
-                                        class="w-full inline-flex items-center justify-center gap-1 text-[9px] sm:text-[10px] font-bold text-blue-700 bg-blue-50/80 hover:bg-blue-100 border border-blue-200/70 py-1 px-1.5 rounded-lg transition cursor-pointer">
-                                    <svg class="w-3 h-3 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span class="truncate">Jadwal Pengambilan</span>
-                                </button>
-                            </div>
                         </div>
 
                         <!-- Price & Order Action Button -->

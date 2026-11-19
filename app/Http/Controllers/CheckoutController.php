@@ -98,6 +98,8 @@ class CheckoutController extends Controller
                     'notes' => $item['notes'] ?? null,
                     'sugar_level' => $item['sugar_level'] ?? null,
                     'jelly_topping' => $item['jelly_topping'] ?? null,
+                    'pickup_day' => $item['pickup_day'] ?? null,
+                    'pickup_batch' => $item['pickup_batch'] ?? null,
                 ]);
             }
 

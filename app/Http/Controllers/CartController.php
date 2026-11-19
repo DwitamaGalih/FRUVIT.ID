@@ -36,19 +36,25 @@ class CartController extends Controller
             'notes' => 'nullable|string|max:255',
             'sugar_level' => 'nullable|string|max:50',
             'jelly_topping' => 'nullable|string|max:50',
+            'pickup_day' => 'nullable|string|max:50',
+            'pickup_batch' => 'nullable|string|max:50',
         ]);
 
         $quantity = $validated['quantity'] ?? 1;
         $notes = $validated['notes'] ?? null;
         $sugarLevel = $validated['sugar_level'] ?? null;
         $jellyTopping = $validated['jelly_topping'] ?? null;
+        $pickupDay = $validated['pickup_day'] ?? null;
+        $pickupBatch = $validated['pickup_batch'] ?? null;
 
         $cart = $this->cartService->add(
             (int) $validated['product_id'],
             $quantity,
             $notes,
             $sugarLevel,
-            $jellyTopping
+            $jellyTopping,
+            $pickupDay,
+            $pickupBatch
         );
 
         if ($request->wantsJson() || $request->ajax()) {

@@ -221,8 +221,11 @@
                                         <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}" class="w-11 h-11 rounded-xl object-cover border border-slate-100 shrink-0">
                                         <div class="min-w-0">
                                             <h4 class="text-xs font-bold text-slate-900 truncate">{{ $item['name'] }}</h4>
-                                            @if(!empty($item['sugar_level']) || !empty($item['jelly_topping']))
+                                            @if(!empty($item['pickup_day']) || !empty($item['sugar_level']) || !empty($item['jelly_topping']))
                                                 <div class="flex flex-wrap gap-1 mt-0.5">
+                                                    @if(!empty($item['pickup_day']) && !empty($item['pickup_batch']))
+                                                        <span class="inline-block px-1.5 py-0.2 rounded text-[8px] font-semibold bg-blue-100 text-blue-800 border border-blue-200">📅 {{ $item['pickup_day'] }} • {{ $item['pickup_batch'] }}</span>
+                                                    @endif
                                                     @if(!empty($item['sugar_level']))
                                                         <span class="inline-block px-1.5 py-0.2 rounded text-[8px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">{{ $item['sugar_level'] }}</span>
                                                     @endif
