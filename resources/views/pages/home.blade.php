@@ -188,14 +188,27 @@
         <!-- 2 Grid on Mobile, 4 Grid on Desktop -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             @foreach($bestSellers as $product)
-                <div class="bg-white rounded-2xl border border-slate-200/80 hover:border-blue-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group">
+                @php
+                    $isSoldOut = $product->is_sold_out;
+                @endphp
+                <div class="bg-white rounded-2xl border border-slate-200/80 transition-all duration-200 flex flex-col justify-between overflow-hidden group {{ $isSoldOut ? 'opacity-85' : 'hover:border-blue-300 hover:shadow-md' }}">
                     
                     <!-- Product Image -->
-                    <div class="relative aspect-square bg-slate-100 overflow-hidden cursor-pointer" 
-                         @click="openProductDetail({{ $product->id }})">
-                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="relative aspect-square bg-slate-100 overflow-hidden {{ $isSoldOut ? 'cursor-not-allowed' : 'cursor-pointer' }}" 
+                         @if(! $isSoldOut) @click="openProductDetail({{ $product->id }})" @endif>
+                        <img src="{{ $product->image_url }}" 
+                             alt="{{ $product->name }}" 
+                             class="w-full h-full object-cover {{ $isSoldOut ? 'grayscale contrast-75 brightness-95' : 'group-hover:scale-105 transition-transform duration-300' }}">
                         
-                        @if($product->badge)
+                        <!-- Badges -->
+                        @if($isSoldOut)
+                            <div class="absolute inset-0 bg-slate-950/25 backdrop-blur-[1.5px] flex items-center justify-center p-2 text-center">
+                                <span class="inline-flex items-center gap-1.5 bg-rose-600/95 text-white font-black text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full shadow-md tracking-wider uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    <span>Habis</span>
+                                </span>
+                            </div>
+                        @elseif($product->badge)
                             <span class="absolute top-2 left-2 bg-yellow-400 text-slate-900 font-bold text-[9px] sm:text-[10px] px-2 py-0.5 rounded-md shadow-2xs">
                                 {{ $product->badge }}
                             </span>
@@ -209,29 +222,57 @@
                     <!-- Details Area -->
                     <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                         <div>
-                            <h3 class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-600 transition cursor-pointer line-clamp-2 leading-snug"
-                                @click="openProductDetail({{ $product->id }})">
+                            <h3 class="text-xs sm:text-sm font-bold {{ $isSoldOut ? 'text-slate-500' : 'text-slate-900 group-hover:text-blue-600 cursor-pointer' }} line-clamp-2 leading-snug"
+                                @if(! $isSoldOut) @click="openProductDetail({{ $product->id }})" @endif>
                                 {{ $product->name }}
                             </h3>
                             <p class="text-[11px] text-slate-400 mt-1 line-clamp-1 leading-relaxed">
                                 {{ $product->description }}
                             </p>
+
+                            <!-- Sisa Stok Badge di Katalog -->
+                            <div class="mt-2 flex items-center gap-1.5">
+                                @if($isSoldOut)
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-bold text-[9px] sm:text-[10px] border border-rose-200">
+                                        <span>✕ Stok Habis</span>
+                                    </span>
+                                @elseif($product->stock <= 5)
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 font-bold text-[9px] sm:text-[10px] border border-amber-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                        <span>Sisa {{ $product->stock }} porsi</span>
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[9px] sm:text-[10px] border border-slate-200">
+                                        <span>Stok: {{ $product->stock }}</span>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <!-- Price & Order Action Button -->
                         <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5">
                             <div>
                                 <span class="text-[10px] text-slate-400 block font-medium">Harga</span>
-                                <span class="text-xs sm:text-sm font-black text-blue-600 block">{{ $product->formatted_price }}</span>
+                                <span class="text-xs sm:text-sm font-black {{ $isSoldOut ? 'text-slate-400' : 'text-blue-600' }} block">{{ $product->formatted_price }}</span>
                             </div>
 
-                            <button type="button"
-                                    @click="openProductDetail({{ $product->id }})"
-                                    class="w-7 h-7 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-2xs transition active:scale-95 cursor-pointer"
-                                    title="Pilih & Atur Menu">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                                <span class="hidden sm:inline">Pesan</span>
-                            </button>
+                            @if($isSoldOut)
+                                <button type="button"
+                                        disabled
+                                        class="h-7 px-2.5 sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs flex items-center justify-center gap-1 cursor-not-allowed select-none"
+                                        title="Stok menu saat ini sedang habis">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                    <span>Habis</span>
+                                </button>
+                            @else
+                                <button type="button"
+                                        @click="openProductDetail({{ $product->id }})"
+                                        class="w-7 h-7 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-2xs transition active:scale-95 cursor-pointer"
+                                        title="Pilih & Atur Menu">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                    <span class="hidden sm:inline">Pesan</span>
+                                </button>
+                            @endif
                         </div>
                     </div>
 

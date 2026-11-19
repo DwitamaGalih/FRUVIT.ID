@@ -20,7 +20,7 @@ class MenuController extends Controller
         $selectedCategory = $request->query('kategori');
         $search = $request->query('cari');
 
-        $productsQuery = Product::where('is_available', true)->with('category');
+        $productsQuery = Product::with('category');
 
         if ($selectedCategory && $selectedCategory !== 'semua') {
             $productsQuery->whereHas('category', function ($q) use ($selectedCategory) {
@@ -35,7 +35,10 @@ class MenuController extends Controller
             });
         }
 
-        $products = $productsQuery->orderBy('sort_order')->get();
+        $products = $productsQuery
+            ->orderByRaw('CASE WHEN is_available = 1 AND stock > 0 THEN 0 ELSE 1 END')
+            ->orderBy('sort_order')
+            ->get();
         $storeStatus = Setting::get('store_status', 'open');
 
         return view('pages.menu', compact('categories', 'products', 'selectedCategory', 'search', 'storeStatus'));
@@ -54,6 +57,8 @@ class MenuController extends Controller
             'category' => $product->category?->name ?? 'Menu',
             'category_slug' => $product->category?->slug ?? '',
             'stock' => $product->stock,
+            'is_available' => (bool) $product->is_available,
+            'is_sold_out' => $product->is_sold_out,
         ]);
     }
 }

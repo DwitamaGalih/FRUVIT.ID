@@ -108,18 +108,25 @@
                                     <!-- Controls Row -->
                                     <div class="flex items-center gap-2 sm:gap-4 shrink-0">
                                         <!-- Qty Stepper -->
-                                        <div class="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 shadow-2xs">
-                                            <button @click="updateCartQty(item.cart_key || item.id, item.quantity - 1)" 
-                                                    type="button" 
-                                                    class="w-6 h-6 rounded text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center transition cursor-pointer text-xs">
-                                                -
-                                            </button>
-                                            <span class="w-7 text-center text-xs font-bold text-slate-900" x-text="item.quantity"></span>
-                                            <button @click="updateCartQty(item.cart_key || item.id, item.quantity + 1)" 
-                                                    type="button" 
-                                                    class="w-6 h-6 rounded bg-blue-600 text-white font-bold hover:bg-blue-700 flex items-center justify-center transition cursor-pointer text-xs shadow-2xs">
-                                                +
-                                            </button>
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 shadow-2xs">
+                                                <button @click="updateCartQty(item.cart_key || item.id, item.quantity - 1)" 
+                                                        type="button" 
+                                                        class="w-6 h-6 rounded text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center transition cursor-pointer text-xs">
+                                                    -
+                                                </button>
+                                                <span class="w-7 text-center text-xs font-bold text-slate-900" x-text="item.quantity"></span>
+                                                <button @click="if(!item.stock || item.quantity < item.stock) updateCartQty(item.cart_key || item.id, item.quantity + 1); else showToast(`Stok maksimal tercapai (${item.stock} porsi)`);" 
+                                                        type="button" 
+                                                        :disabled="item.stock && item.quantity >= item.stock"
+                                                        :class="item.stock && item.quantity >= item.stock ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-2xs'"
+                                                        class="w-6 h-6 rounded flex items-center justify-center transition text-xs">
+                                                    +
+                                                </button>
+                                            </div>
+                                            <template x-if="item.stock && item.quantity >= item.stock">
+                                                <span class="text-[9px] text-amber-600 font-semibold hidden sm:inline">(Maks stok)</span>
+                                            </template>
                                         </div>
 
                                         <div class="text-right min-w-[70px]">

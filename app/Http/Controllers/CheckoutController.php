@@ -71,40 +71,63 @@ class CheckoutController extends Controller
 
         $initialPaymentStatus = 'unpaid';
 
-        $order = DB::transaction(function () use ($validated, $orderNumber, $subtotal, $deliveryFee, $totalAmount, $initialPaymentStatus, $cart) {
-            $order = Order::create([
-                'order_number' => $orderNumber,
-                'customer_name' => $validated['customer_name'],
-                'customer_phone' => $validated['customer_phone'],
-                'delivery_method' => $validated['delivery_method'],
-                'shipping_address' => $validated['shipping_address'] ?? null,
-                'notes' => $validated['notes'] ?? null,
-                'subtotal' => $subtotal,
-                'delivery_fee' => $deliveryFee,
-                'total_amount' => $totalAmount,
-                'payment_method' => $validated['payment_method'],
-                'payment_status' => $initialPaymentStatus,
-                'order_status' => 'new',
-            ]);
+        try {
+            $order = DB::transaction(function () use ($validated, $orderNumber, $subtotal, $deliveryFee, $totalAmount, $initialPaymentStatus, $cart) {
+                // Validasi & kunci stok produk dengan lockForUpdate untuk mencegah race condition
+                foreach ($cart['items'] as $item) {
+                    $product = \App\Models\Product::lockForUpdate()->find($item['id']);
+                    if (! $product || ! $product->is_available || $product->stock < $item['quantity']) {
+                        $sisa = $product ? max(0, $product->stock) : 0;
+                        throw new \Exception("Maaf, stok {$item['name']} tidak mencukupi (sisa: {$sisa} porsi). Silakan sesuaikan jumlah pesanan Anda di keranjang.");
+                    }
+                }
 
-            foreach ($cart['items'] as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item['id'],
-                    'product_name' => $item['name'],
-                    'product_price' => $item['price'],
-                    'quantity' => $item['quantity'],
-                    'subtotal' => $item['subtotal'],
-                    'notes' => $item['notes'] ?? null,
-                    'sugar_level' => $item['sugar_level'] ?? null,
-                    'jelly_topping' => $item['jelly_topping'] ?? null,
-                    'pickup_day' => $item['pickup_day'] ?? null,
-                    'pickup_batch' => $item['pickup_batch'] ?? null,
+                $order = Order::create([
+                    'order_number' => $orderNumber,
+                    'customer_name' => $validated['customer_name'],
+                    'customer_phone' => $validated['customer_phone'],
+                    'delivery_method' => $validated['delivery_method'],
+                    'shipping_address' => $validated['shipping_address'] ?? null,
+                    'notes' => $validated['notes'] ?? null,
+                    'subtotal' => $subtotal,
+                    'delivery_fee' => $deliveryFee,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $validated['payment_method'],
+                    'payment_status' => $initialPaymentStatus,
+                    'order_status' => 'new',
                 ]);
-            }
 
-            return $order;
-        });
+                foreach ($cart['items'] as $item) {
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item['id'],
+                        'product_name' => $item['name'],
+                        'product_price' => $item['price'],
+                        'quantity' => $item['quantity'],
+                        'subtotal' => $item['subtotal'],
+                        'notes' => $item['notes'] ?? null,
+                        'sugar_level' => $item['sugar_level'] ?? null,
+                        'jelly_topping' => $item['jelly_topping'] ?? null,
+                        'pickup_day' => $item['pickup_day'] ?? null,
+                        'pickup_batch' => $item['pickup_batch'] ?? null,
+                    ]);
+
+                    // Kurangi stok produk secara otomatis
+                    $product = \App\Models\Product::find($item['id']);
+                    if ($product) {
+                        $newStock = max(0, $product->stock - $item['quantity']);
+                        $product->update([
+                            'stock' => $newStock,
+                            'is_available' => $newStock > 0 ? $product->is_available : false,
+                        ]);
+                    }
+                }
+
+                return $order;
+            });
+        } catch (\Exception $e) {
+            return redirect()->route('cart.index')->with('error', $e->getMessage());
+        }
 
         // Clear cart
         $this->cartService->clear();

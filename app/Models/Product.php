@@ -46,6 +46,11 @@ class Product extends Model
         return 'Rp '.number_format((float) $this->price, 0, ',', '.');
     }
 
+    public function getIsSoldOutAttribute(): bool
+    {
+        return ! $this->is_available || $this->stock <= 0;
+    }
+
     public function getImageUrlAttribute(): string
     {
         if ($this->image && file_exists(public_path($this->image))) {
