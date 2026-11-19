@@ -14,6 +14,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome 6 Free -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <!-- Alpine.js & Scripts -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
 
@@ -38,24 +41,29 @@
                 <!-- Desktop Navigation Links -->
                 <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
                     <a href="{{ route('home') }}" 
-                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                        Home
+                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-house text-xs"></i>
+                        <span>Home</span>
                     </a>
                     <a href="{{ route('menu.index') }}" 
-                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('menu.*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                        Menu
+                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 {{ request()->routeIs('menu.*') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-utensils text-xs"></i>
+                        <span>Menu</span>
                     </a>
                     <a href="{{ route('home') }}#tentang" 
-                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
-                        Tentang Kami
+                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info text-xs"></i>
+                        <span>Tentang Kami</span>
                     </a>
                     <a href="{{ route('home') }}#kontak" 
-                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
-                        Kontak
+                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-address-book text-xs"></i>
+                        <span>Kontak</span>
                     </a>
                     <a href="{{ route('order.track') }}" 
-                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('order.track') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                        Cek Pesanan
+                       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 {{ request()->routeIs('order.track') ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-clipboard-list text-xs"></i>
+                        <span>Cek Pesanan</span>
                     </a>
                 </nav>
 
@@ -65,19 +73,17 @@
                     <!-- Shopping Cart Button -->
                     <button @click="openCartDrawer = true" 
                             type="button"
-                            class="relative inline-flex items-center gap-1.5 p-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-slate-200/90 hover:border-blue-300 bg-white hover:bg-blue-50/50 text-slate-700 hover:text-blue-600 font-bold text-xs sm:text-sm shadow-2xs transition-all duration-200 cursor-pointer active:scale-95"
+                            class="relative inline-flex items-center gap-2 p-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-slate-200/90 hover:border-blue-300 bg-white hover:bg-blue-50/50 text-slate-700 hover:text-blue-600 font-bold text-xs sm:text-sm shadow-2xs transition-all duration-200 cursor-pointer active:scale-95"
                             title="Keranjang Belanja">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
+                        <i class="fa-solid fa-bag-shopping text-blue-600 text-base"></i>
                         <span class="font-bold">Keranjang</span>
                     </button>
 
                     <!-- CTA Button Pesan Sekarang (Desktop) -->
                     <a href="{{ route('menu.index') }}" 
-                       class="hidden sm:inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-md transition active:scale-95">
+                       class="hidden sm:inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-md transition active:scale-95">
                         <span>Pesan Sekarang</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             </div>
@@ -89,30 +95,30 @@
         @if(session('success'))
             <div x-data="{ show: true }" x-show="show" class="mb-3 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-2xs">
                 <div class="flex items-center gap-2.5">
-                    <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                    <i class="fa-solid fa-circle-check text-blue-600 text-sm shrink-0"></i>
                     <span>{{ session('success') }}</span>
                 </div>
-                <button @click="show = false" class="text-blue-500 hover:text-blue-800">&times;</button>
+                <button @click="show = false" class="text-blue-500 hover:text-blue-800 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
         @endif
 
         @if(session('error'))
             <div x-data="{ show: true }" x-show="show" class="mb-3 bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-2xs">
                 <div class="flex items-center gap-2.5">
-                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <i class="fa-solid fa-circle-xmark text-rose-600 text-sm shrink-0"></i>
                     <span>{{ session('error') }}</span>
                 </div>
-                <button @click="show = false" class="text-rose-500 hover:text-rose-800">&times;</button>
+                <button @click="show = false" class="text-rose-500 hover:text-rose-800 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
         @endif
 
         @if(session('warning'))
             <div x-data="{ show: true }" x-show="show" class="mb-3 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-2xs">
                 <div class="flex items-center gap-2.5">
-                    <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm shrink-0"></i>
                     <span>{{ session('warning') }}</span>
                 </div>
-                <button @click="show = false" class="text-amber-500 hover:text-amber-800">&times;</button>
+                <button @click="show = false" class="text-amber-500 hover:text-amber-800 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
         @endif
     </div>
@@ -135,10 +141,8 @@
         <div class="max-w-xl mx-auto pointer-events-auto">
             <div class="bg-slate-900/95 backdrop-blur-md text-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-xl border border-slate-700/60 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-2.5">
-                    <div class="relative bg-blue-600 text-white p-2 rounded-xl shadow-xs">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
+                    <div class="relative bg-blue-600 text-white w-9 h-9 rounded-xl shadow-xs flex items-center justify-center">
+                        <i class="fa-solid fa-bag-shopping text-base"></i>
                         <span x-text="cart.count" class="absolute -top-1.5 -right-1.5 bg-yellow-400 text-slate-900 font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">1</span>
                     </div>
                     <div>
@@ -155,7 +159,7 @@
                     <a href="{{ route('checkout.index') }}" 
                        class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm transition cursor-pointer">
                         <span>Checkout</span>
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             </div>
@@ -169,18 +173,14 @@
             <!-- Tab 1: Home -->
             <a href="{{ route('home') }}" 
                class="flex flex-col items-center py-1 transition {{ request()->routeIs('home') ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium' }}">
-                <svg class="w-5 h-5 {{ request()->routeIs('home') ? 'text-blue-600' : 'text-slate-400' }}" fill="{{ request()->routeIs('home') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
+                <i class="fa-solid fa-house text-base {{ request()->routeIs('home') ? 'text-blue-600' : 'text-slate-400' }}"></i>
                 <span class="text-[10px] mt-0.5">Home</span>
             </a>
 
             <!-- Tab 2: Menu -->
             <a href="{{ route('menu.index') }}" 
                class="flex flex-col items-center py-1 transition {{ request()->routeIs('menu.*') ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium' }}">
-                <svg class="w-5 h-5 {{ request()->routeIs('menu.*') ? 'text-blue-600' : 'text-slate-400' }}" fill="{{ request()->routeIs('menu.*') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                </svg>
+                <i class="fa-solid fa-utensils text-base {{ request()->routeIs('menu.*') ? 'text-blue-600' : 'text-slate-400' }}"></i>
                 <span class="text-[10px] mt-0.5">Menu</span>
             </a>
 
@@ -189,9 +189,7 @@
                     type="button"
                     class="relative flex flex-col items-center py-1 transition text-slate-500 hover:text-slate-800 font-medium cursor-pointer">
                 <div>
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                    </svg>
+                    <i class="fa-solid fa-bag-shopping text-base text-slate-400"></i>
                 </div>
                 <span class="text-[10px] mt-0.5">Keranjang</span>
             </button>
@@ -199,9 +197,7 @@
             <!-- Tab 4: Lacak -->
             <a href="{{ route('order.track') }}" 
                class="flex flex-col items-center py-1 transition {{ request()->routeIs('order.track') ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium' }}">
-                <svg class="w-5 h-5 {{ request()->routeIs('order.track') ? 'text-blue-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                </svg>
+                <i class="fa-solid fa-clipboard-list text-base {{ request()->routeIs('order.track') ? 'text-blue-600' : 'text-slate-400' }}"></i>
                 <span class="text-[10px] mt-0.5">Lacak</span>
             </a>
 
@@ -245,9 +241,7 @@
                         <div class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                    </svg>
+                                    <i class="fa-solid fa-bag-shopping text-base"></i>
                                 </div>
                                 <div>
                                     <h2 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight" id="slide-over-title">Keranjang Pesanan</h2>
@@ -260,7 +254,7 @@
                                     type="button" 
                                     class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition active:scale-90 cursor-pointer"
                                     title="Tutup">
-                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                <i class="fa-solid fa-xmark text-sm"></i>
                             </button>
                         </div>
 
@@ -357,9 +351,9 @@
                                     <div class="text-right flex flex-col justify-between items-end h-16 sm:h-18 shrink-0">
                                         <button @click="removeFromCart(item.cart_key || item.id)" 
                                                 type="button" 
-                                                class="text-slate-300 hover:text-rose-500 p-1 rounded-lg hover:bg-rose-50 transition cursor-pointer" 
+                                                class="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg hover:bg-rose-50 transition cursor-pointer" 
                                                 title="Hapus">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            <i class="fa-solid fa-trash-can text-sm"></i>
                                         </button>
                                         <div class="text-xs sm:text-sm font-bold text-slate-900" x-text="item.formatted_subtotal"></div>
                                     </div>
@@ -375,7 +369,7 @@
                             </div>
                             
                             <div class="flex items-center gap-2 text-[11px] text-blue-700 bg-blue-50 px-3 py-2 rounded-xl border border-blue-100">
-                                <span class="font-bold">✓</span>
+                                <i class="fa-solid fa-check text-blue-600"></i>
                                 <span>Pilihan Delivery ke Kampus / Kos & Pickup Stand</span>
                             </div>
 
@@ -389,7 +383,7 @@
                                    @click="openCartDrawer = false"
                                    class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition active:scale-95">
                                     <span>Checkout</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                    <i class="fa-solid fa-arrow-right text-xs"></i>
                                 </a>
                             </div>
                         </div>
@@ -422,8 +416,8 @@
                      class="relative transform overflow-hidden rounded-t-[28px] sm:rounded-2xl bg-white text-left shadow-2xl transition-all w-full sm:max-w-md border border-slate-100 max-h-[90vh] flex flex-col">
                     
                     <!-- Close button -->
-                    <button @click="closeProductModal()" class="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur-xs text-slate-500 hover:text-slate-900 rounded-full p-2 shadow-xs cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <button @click="closeProductModal()" class="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur-xs text-slate-500 hover:text-slate-900 rounded-full w-8 h-8 flex items-center justify-center shadow-xs cursor-pointer">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
 
                     <!-- Product Image -->
@@ -473,7 +467,7 @@
                         <div class="p-3.5 bg-blue-50/60 rounded-xl border border-blue-100 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <i class="fa-solid fa-clock text-blue-600 text-xs"></i>
                                     <span>Jadwal Pengambilan</span>
                                 </span>
                                 <span class="text-[10px] text-blue-600 font-semibold" x-text="`${productModal.pickupDay} • ${productModal.pickupBatch}`"></span>
@@ -487,13 +481,15 @@
                                             @click="productModal.pickupDay = 'Senin'"
                                             class="py-2 px-2 rounded-lg text-[11px] font-bold border transition text-center cursor-pointer select-none flex items-center justify-center gap-1.5"
                                             :class="productModal.pickupDay === 'Senin' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
-                                        <span>📅 Senin</span>
+                                        <i class="fa-regular fa-calendar-check text-xs"></i>
+                                        <span>Senin</span>
                                     </button>
                                     <button type="button"
                                             @click="productModal.pickupDay = 'Kamis'"
                                             class="py-2 px-2 rounded-lg text-[11px] font-bold border transition text-center cursor-pointer select-none flex items-center justify-center gap-1.5"
                                             :class="productModal.pickupDay === 'Kamis' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
-                                        <span>📅 Kamis</span>
+                                        <i class="fa-regular fa-calendar-check text-xs"></i>
+                                        <span>Kamis</span>
                                     </button>
                                 </div>
                             </div>
@@ -514,7 +510,7 @@
                                             class="p-2 rounded-lg text-left border transition cursor-pointer select-none"
                                             :class="productModal.pickupBatch === 'Batch 2' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                         <div class="text-[11px] font-bold">Batch 2</div>
-                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? '03.00-04.00 AM' : 'Pukul 02.00 AM'"></div>
+                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? 'Pukul 03.00 PM' : 'Pukul 02.00 PM'"></div>
                                     </button>
                                 </div>
                             </div>
@@ -615,8 +611,8 @@
                             <button x-show="!productModal.item.is_sold_out"
                                     @click="submitModalToCart()" 
                                     type="button" 
-                                    class="grow bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                    class="grow bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-xs transition flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+                                <i class="fa-solid fa-plus text-xs"></i>
                                 <span>Tambah ke Keranjang</span>
                                 <span class="text-blue-100 font-semibold" x-show="productModal.item.price" x-text="`• Rp ${new Intl.NumberFormat('id-ID').format(productModal.item.price * productModal.qty)}`"></span>
                             </button>
@@ -624,8 +620,8 @@
                             <button x-show="productModal.item.is_sold_out"
                                     type="button" 
                                     disabled
-                                    class="w-full bg-slate-100 text-slate-400 font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-1.5 cursor-not-allowed select-none">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                    class="w-full bg-slate-100 text-slate-400 font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed select-none">
+                                <i class="fa-solid fa-ban text-xs"></i>
                                 <span>Menu Sedang Habis (Sold Out)</span>
                             </button>
                         </div>
@@ -645,11 +641,11 @@
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 translate-y-4"
          class="fixed top-20 right-4 z-50 max-w-xs w-full bg-slate-900 text-white p-3.5 rounded-2xl shadow-xl flex items-center gap-2.5 border border-slate-800">
-        <div class="p-1 bg-blue-600 rounded-lg text-white shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+        <div class="w-7 h-7 bg-blue-600 rounded-lg text-white flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-circle-check text-sm"></i>
         </div>
         <div class="grow text-xs font-semibold truncate" x-text="toast.message">Pesanan ditambahkan!</div>
-        <button @click="toast.show = false" class="text-slate-400 hover:text-white">&times;</button>
+        <button @click="toast.show = false" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
     </div>
 
     <!-- Modal Jadwal Pengambilan (Batch Ready) -->
@@ -677,15 +673,15 @@
                     <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                         <div class="flex items-center gap-2.5">
                             <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <i class="fa-solid fa-clock text-base"></i>
                             </div>
                             <div>
                                 <h3 class="text-sm sm:text-base font-bold text-slate-900">Jadwal Pengambilan</h3>
                                 <p class="text-[11px] text-slate-400">Batch Ready FRUVIT.ID</p>
                             </div>
                         </div>
-                        <button @click="openScheduleModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        <button @click="openScheduleModal = false" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center transition cursor-pointer">
+                            <i class="fa-solid fa-xmark text-sm"></i>
                         </button>
                     </div>
 
@@ -695,7 +691,8 @@
                         <div class="p-3.5 rounded-xl bg-blue-50/60 border border-blue-100 space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-600 text-white text-xs font-black">
-                                    <span>📅 Senin</span>
+                                    <i class="fa-regular fa-calendar-check text-[10px]"></i>
+                                    <span>Senin</span>
                                 </span>
                                 <span class="text-[10px] font-semibold text-blue-600">2 Batch Tersedia</span>
                             </div>
@@ -706,7 +703,7 @@
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                                    <span><strong>Batch 2:</strong> Ready pukul 03.00 - 04.00 AM</span>
+                                    <span><strong>Batch 2:</strong> Ready pukul 03.00 PM</span>
                                 </li>
                             </ul>
                         </div>
@@ -715,7 +712,8 @@
                         <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-800 text-white text-xs font-black">
-                                    <span>📅 Kamis</span>
+                                    <i class="fa-regular fa-calendar-check text-[10px]"></i>
+                                    <span>Kamis</span>
                                 </span>
                                 <span class="text-[10px] font-semibold text-slate-500">2 Batch Tersedia</span>
                             </div>
@@ -783,16 +781,16 @@
                 <div id="kontak">
                     <h3 class="text-xs font-bold text-slate-900 tracking-wider uppercase mb-3">Kontak & Lokasi</h3>
                     <ul class="space-y-2 text-xs text-slate-500">
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-600">📍</span>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-location-dot text-blue-600 mt-0.5 text-xs"></i>
                             <span>Stand Kewirausahaan FRUVIT.ID (Food Court Kampus)</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-blue-600">💬</span>
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-brands fa-whatsapp text-blue-600 text-xs"></i>
                             <span>WhatsApp: 0812-3456-7890</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-blue-600">💳</span>
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-money-bill-wave text-blue-600 text-xs"></i>
                             <span>Metode: QRIS & Cash</span>
                         </li>
                     </ul>

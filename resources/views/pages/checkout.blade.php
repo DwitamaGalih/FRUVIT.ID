@@ -110,7 +110,9 @@
                                    :class="deliveryMethod === 'pickup' ? 'border-blue-600 bg-blue-50/40' : 'border-slate-200 bg-white hover:border-slate-300'">
                                 <input type="radio" name="delivery_method" value="pickup" x-model="deliveryMethod" class="sr-only">
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-lg sm:text-xl">🏪</span>
+                                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                                        <i class="fa-solid fa-store"></i>
+                                    </div>
                                     <span class="text-[10px] sm:text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-md">Gratis</span>
                                 </div>
                                 <span class="text-xs sm:text-sm font-bold text-slate-900 leading-tight">Ambil Sendiri</span>
@@ -122,7 +124,9 @@
                                    :class="deliveryMethod === 'delivery' ? 'border-blue-600 bg-blue-50/40' : 'border-slate-200 bg-white hover:border-slate-300'">
                                 <input type="radio" name="delivery_method" value="delivery" x-model="deliveryMethod" class="sr-only">
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-lg sm:text-xl">🛵</span>
+                                    <div class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center text-sm">
+                                        <i class="fa-solid fa-motorcycle"></i>
+                                    </div>
                                     <span class="text-[10px] sm:text-xs font-bold text-slate-900 bg-yellow-400 px-2 py-0.5 rounded-md">+1k</span>
                                 </div>
                                 <span class="text-xs sm:text-sm font-bold text-slate-900 leading-tight">Delivery</span>
@@ -185,7 +189,9 @@
                                         <div class="text-[10px] text-slate-400 mt-0.5">GoPay, OVO, Dana, ShopeePay, BCA & Semua m-Banking</div>
                                     </div>
                                 </div>
-                                <span class="text-lg">📲</span>
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                </div>
                             </label>
 
                             <!-- Cash saat Ambil / COD -->
@@ -198,7 +204,9 @@
                                         <div class="text-[10px] text-slate-400 mt-0.5">Bayar langsung di stand saat mengambil pesanan</div>
                                     </div>
                                 </div>
-                                <span class="text-lg">💵</span>
+                                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                </div>
                             </label>
                         </div>
                     </div>
@@ -267,7 +275,7 @@
                         <!-- Submit Button -->
                         <button type="submit" 
                                 class="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-xs hover:shadow-md transition cursor-pointer active:scale-95">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                            <i class="fa-solid fa-check text-xs"></i>
                             <span>Buat Pesanan</span>
                         </button>
                     </div>

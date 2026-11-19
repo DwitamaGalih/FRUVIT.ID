@@ -32,11 +32,13 @@
                                value="{{ $search ?? '' }}" 
                                placeholder="Cari salad, susu jelly, buah potong..." 
                                class="w-full bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl py-2.5 sm:py-3 pl-10 pr-20 text-xs sm:text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
-                        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 sm:top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-3.5 sm:top-4 text-xs"></i>
                         
                         <div class="absolute right-1.5 top-1.5 flex items-center gap-1">
                             @if(!empty($search))
-                                <a href="{{ route('menu.index', ['kategori' => $selectedCategory]) }}" class="px-2 py-1 text-xs text-slate-400 hover:text-slate-600 font-bold">&times;</a>
+                                <a href="{{ route('menu.index', ['kategori' => $selectedCategory]) }}" class="px-2 py-1 text-xs text-slate-400 hover:text-slate-600 font-bold cursor-pointer">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
                             @endif
                             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer">
                                 Cari
@@ -67,12 +69,13 @@
         @if($products->isEmpty())
             <div class="text-center py-16 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-8 max-w-md mx-auto">
                 <div class="w-16 h-16 mx-auto mb-3 flex items-center justify-center rounded-2xl bg-blue-50 text-blue-600 text-2xl">
-                    🔍
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900">Menu Tidak Ditemukan</h3>
                 <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Coba kata kunci pencarian lain atau pilih kategori menu di atas.</p>
-                <a href="{{ route('menu.index') }}" class="mt-4 inline-flex items-center gap-1.5 bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-                    Reset Filter
+                <a href="{{ route('menu.index') }}" class="mt-4 inline-flex items-center gap-2 bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                    <span>Reset Filter</span>
                 </a>
             </div>
         @else
@@ -151,17 +154,17 @@
                                 @if($isSoldOut)
                                     <button type="button"
                                             disabled
-                                            class="h-7 px-2.5 sm:h-8 sm:px-3 rounded-lg sm:rounded-xl bg-slate-100 text-slate-400 font-bold text-xs flex items-center justify-center gap-1 cursor-not-allowed select-none"
+                                            class="h-7 px-2.5 sm:h-8 sm:px-3 rounded-lg sm:rounded-xl bg-slate-100 text-slate-400 font-bold text-xs flex items-center justify-center gap-1.5 cursor-not-allowed select-none"
                                             title="Stok menu saat ini sedang habis">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                        <i class="fa-solid fa-ban text-[11px]"></i>
                                         <span>Habis</span>
                                     </button>
                                 @else
                                     <button type="button"
                                             @click="openProductDetail({{ $product->id }})"
-                                            class="h-7 px-2.5 sm:h-8 sm:px-3 rounded-lg sm:rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-2xs transition active:scale-95 cursor-pointer"
+                                            class="h-7 px-2.5 sm:h-8 sm:px-3 rounded-lg sm:rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-2xs transition active:scale-95 cursor-pointer"
                                             title="Pilih & Atur Menu">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                        <i class="fa-solid fa-plus text-xs"></i>
                                         <span class="hidden sm:inline">Pesan</span>
                                     </button>
                                 @endif

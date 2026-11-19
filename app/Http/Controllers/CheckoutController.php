@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\Setting;
 use App\Services\CartService;
 use Illuminate\Contracts\View\View;
@@ -75,7 +76,7 @@ class CheckoutController extends Controller
             $order = DB::transaction(function () use ($validated, $orderNumber, $subtotal, $deliveryFee, $totalAmount, $initialPaymentStatus, $cart) {
                 // Validasi & kunci stok produk dengan lockForUpdate untuk mencegah race condition
                 foreach ($cart['items'] as $item) {
-                    $product = \App\Models\Product::lockForUpdate()->find($item['id']);
+                    $product = Product::lockForUpdate()->find($item['id']);
                     if (! $product || ! $product->is_available || $product->stock < $item['quantity']) {
                         $sisa = $product ? max(0, $product->stock) : 0;
                         throw new \Exception("Maaf, stok {$item['name']} tidak mencukupi (sisa: {$sisa} porsi). Silakan sesuaikan jumlah pesanan Anda di keranjang.");
@@ -113,7 +114,7 @@ class CheckoutController extends Controller
                     ]);
 
                     // Kurangi stok produk secara otomatis
-                    $product = \App\Models\Product::find($item['id']);
+                    $product = Product::find($item['id']);
                     if ($product) {
                         $newStock = max(0, $product->stock - $item['quantity']);
                         $product->update([

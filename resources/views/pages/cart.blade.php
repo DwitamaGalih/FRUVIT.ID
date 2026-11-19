@@ -31,7 +31,7 @@
                 <div class="mt-5">
                     <a href="{{ route('menu.index') }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-xs active:scale-95 transition">
                         <span>Pilih Menu Sekarang</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
                 </div>
 
@@ -70,8 +70,8 @@
                             <h2 class="text-sm sm:text-base font-bold text-slate-900" x-text="`Daftar Pesanan (${cart.count} item)`"></h2>
                             <form action="{{ route('cart.clear') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan keranjang?')">
                                 @csrf
-                                <button type="submit" class="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1 cursor-pointer">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <button type="submit" class="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
                                     <span>Kosongkan</span>
                                 </button>
                             </form>
@@ -135,9 +135,9 @@
 
                                         <button @click="removeFromCart(item.cart_key || item.id)" 
                                                 type="button" 
-                                                class="text-slate-300 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-50 transition cursor-pointer"
+                                                class="text-slate-300 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition cursor-pointer"
                                                 title="Hapus">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            <i class="fa-solid fa-trash-can text-sm"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                         <!-- Back to Menu Button -->
                         <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between">
                             <a href="{{ route('menu.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                                <i class="fa-solid fa-arrow-left text-xs"></i>
                                 <span>Tambah Menu Lainnya</span>
                             </a>
                         </div>
@@ -185,9 +185,9 @@
                         </div>
 
                         <a href="{{ route('checkout.index') }}" 
-                           class="w-full inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-xs hover:shadow-md transition cursor-pointer active:scale-95">
+                           class="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-xs hover:shadow-md transition cursor-pointer active:scale-95">
                             <span>Lanjut ke Checkout</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
                         </a>
                     </div>
                 </div>

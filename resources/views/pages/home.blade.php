@@ -37,12 +37,12 @@
                     <a href="{{ route('menu.index') }}" 
                        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-5 py-3 sm:py-3.5 rounded-xl shadow-xs hover:shadow-md transition active:scale-95 cursor-pointer">
                         <span>Lihat Menu</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
                     
                     <a href="{{ route('order.track') }}" 
                        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs sm:text-sm px-4 py-3 sm:py-3.5 rounded-xl transition hover:border-blue-300">
-                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        <i class="fa-solid fa-clipboard-list text-slate-500 text-xs"></i>
                         <span>Cek Pesanan</span>
                     </a>
                 </div>
@@ -121,8 +121,8 @@
         <div class="grid grid-cols-3 gap-2 sm:gap-6">
             
             <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-center sm:text-left flex flex-col items-center sm:items-start justify-between">
-                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg sm:text-2xl font-bold mb-2 sm:mb-3 shrink-0">
-                    🍓
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-sm sm:text-lg font-bold mb-2 sm:mb-3 shrink-0">
+                    <i class="fa-solid fa-leaf text-emerald-600"></i>
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-tight">100% Alami</h3>
@@ -136,8 +136,8 @@
             </div>
 
             <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-center sm:text-left flex flex-col items-center sm:items-start justify-between">
-                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg sm:text-2xl font-bold mb-2 sm:mb-3 shrink-0">
-                    ❄️
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-sm sm:text-lg font-bold mb-2 sm:mb-3 shrink-0">
+                    <i class="fa-solid fa-snowflake text-blue-500"></i>
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-tight">Selalu Fresh</h3>
@@ -151,8 +151,8 @@
             </div>
 
             <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-200 hover:bg-blue-50/30 transition text-center sm:text-left flex flex-col items-center sm:items-start justify-between">
-                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg sm:text-2xl font-bold mb-2 sm:mb-3 shrink-0">
-                    🛵
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-sm sm:text-lg font-bold mb-2 sm:mb-3 shrink-0">
+                    <i class="fa-solid fa-motorcycle text-blue-600"></i>
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-tight">Pesan Praktis</h3>
@@ -179,9 +179,9 @@
                 <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Paling Laris</span>
                 <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 mt-0.5">Produk Unggulan (Best Seller)</h2>
             </div>
-            <a href="{{ route('menu.index') }}" class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 transition">
+            <a href="{{ route('menu.index') }}" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 transition">
                 <span>Lihat Semua</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
             </a>
         </div>
 
@@ -259,17 +259,17 @@
                             @if($isSoldOut)
                                 <button type="button"
                                         disabled
-                                        class="h-7 px-2.5 sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs flex items-center justify-center gap-1 cursor-not-allowed select-none"
+                                        class="h-7 px-2.5 sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs flex items-center justify-center gap-1.5 cursor-not-allowed select-none"
                                         title="Stok menu saat ini sedang habis">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                    <i class="fa-solid fa-ban text-[11px]"></i>
                                     <span>Habis</span>
                                 </button>
                             @else
                                 <button type="button"
                                         @click="openProductDetail({{ $product->id }})"
-                                        class="w-7 h-7 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-2xs transition active:scale-95 cursor-pointer"
+                                        class="w-7 h-7 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-2xs transition active:scale-95 cursor-pointer"
                                         title="Pilih & Atur Menu">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                    <i class="fa-solid fa-plus text-xs"></i>
                                     <span class="hidden sm:inline">Pesan</span>
                                 </button>
                             @endif
@@ -284,7 +284,7 @@
             <a href="{{ route('menu.index') }}" 
                class="inline-flex items-center gap-2 bg-white hover:bg-blue-50 text-blue-600 border border-blue-300 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl transition shadow-2xs">
                 <span>Buka Seluruh Katalog Menu</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
             </a>
         </div>
 
