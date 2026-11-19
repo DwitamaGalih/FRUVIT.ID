@@ -341,12 +341,17 @@
                                                     -
                                                 </button>
                                                 <span class="w-7 text-center text-xs font-bold text-slate-900" x-text="item.quantity"></span>
-                                                <button @click="updateCartQty(item.cart_key || item.id, item.quantity + 1)" 
+                                                <button @click="if(!item.stock || item.quantity < item.stock) updateCartQty(item.cart_key || item.id, item.quantity + 1); else showToast(`Stok maksimal tercapai (${item.stock} porsi)`);" 
                                                         type="button" 
-                                                        class="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 active:scale-90 font-bold text-xs transition cursor-pointer shadow-2xs">
+                                                        :disabled="item.stock && item.quantity >= item.stock"
+                                                        :class="item.stock && item.quantity >= item.stock ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-2xs'"
+                                                        class="w-6 h-6 rounded-md flex items-center justify-center active:scale-90 font-bold text-xs transition">
                                                     +
                                                 </button>
                                             </div>
+                                            <template x-if="item.stock && item.quantity >= item.stock">
+                                                <span class="text-[9px] text-amber-600 font-semibold">(Maks stok)</span>
+                                            </template>
                                         </div>
                                     </div>
                                     <div class="text-right flex flex-col justify-between items-end h-16 sm:h-18 shrink-0">
@@ -423,11 +428,16 @@
 
                     <!-- Product Image -->
                     <div class="relative h-48 sm:h-56 w-full bg-slate-100 overflow-hidden shrink-0">
-                        <img :src="productModal.item.image_url" :alt="productModal.item.name" class="w-full h-full object-cover">
-                        <span x-show="productModal.item.badge" 
+                        <img :src="productModal.item.image_url" :alt="productModal.item.name" class="w-full h-full object-cover" :class="productModal.item.is_sold_out ? 'grayscale contrast-75 brightness-95' : ''">
+                        <span x-show="!productModal.item.is_sold_out && productModal.item.badge" 
                               x-text="productModal.item.badge" 
                               class="absolute top-3 left-3 bg-yellow-400 text-slate-900 font-bold text-[10px] px-2.5 py-0.5 rounded-md shadow-2xs">
                         </span>
+                        <div x-show="productModal.item.is_sold_out" class="absolute inset-0 bg-slate-950/30 backdrop-blur-[1.5px] flex items-center justify-center">
+                            <span class="bg-rose-600 text-white font-black text-xs px-3.5 py-1 rounded-full shadow-md tracking-wider uppercase">
+                                Stok Habis
+                            </span>
+                        </div>
                     </div>
 
                     <!-- Content -->
@@ -436,6 +446,23 @@
                             <div>
                                 <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider" x-text="productModal.item.category"></span>
                                 <h3 class="text-base sm:text-lg font-bold text-slate-900 mt-0.5" x-text="productModal.item.name"></h3>
+                                <!-- Sisa Stok Info di Modal -->
+                                <div class="mt-1">
+                                    <template x-if="productModal.item.is_sold_out">
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600">
+                                            ✕ Stok Habis
+                                        </span>
+                                    </template>
+                                    <template x-if="!productModal.item.is_sold_out && productModal.item.stock <= 5">
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                            <span x-text="`Sisa ${productModal.item.stock} porsi lagi`"></span>
+                                        </span>
+                                    </template>
+                                    <template x-if="!productModal.item.is_sold_out && productModal.item.stock > 5">
+                                        <span class="text-[10px] text-slate-500" x-text="`Tersedia: ${productModal.item.stock} porsi`"></span>
+                                    </template>
+                                </div>
                             </div>
                             <div class="text-base sm:text-lg font-black text-blue-600 shrink-0" x-text="productModal.item.formatted_price"></div>
                         </div>
@@ -573,18 +600,33 @@
 
                         <!-- Quantity Selector & Action -->
                         <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                            <div class="flex items-center border border-slate-200 rounded-xl p-0.5 bg-slate-50">
-                                <button @click="if(productModal.qty > 1) productModal.qty--" type="button" class="w-8 h-8 rounded-lg bg-white text-slate-700 font-bold hover:bg-slate-100 transition flex items-center justify-center shadow-2xs cursor-pointer text-xs">-</button>
-                                <span class="w-9 text-center text-xs font-bold text-slate-900" x-text="productModal.qty">1</span>
-                                <button @click="productModal.qty++" type="button" class="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 transition flex items-center justify-center shadow-2xs cursor-pointer text-xs">+</button>
-                            </div>
+                            <template x-if="!productModal.item.is_sold_out">
+                                <div class="flex items-center border border-slate-200 rounded-xl p-0.5 bg-slate-50">
+                                    <button @click="if(productModal.qty > 1) productModal.qty--" type="button" class="w-8 h-8 rounded-lg bg-white text-slate-700 font-bold hover:bg-slate-100 transition flex items-center justify-center shadow-2xs cursor-pointer text-xs">-</button>
+                                    <span class="w-9 text-center text-xs font-bold text-slate-900" x-text="productModal.qty">1</span>
+                                    <button @click="if(!productModal.item.stock || productModal.qty < productModal.item.stock) productModal.qty++; else showToast(`Maksimal pesanan ${productModal.item.stock} porsi`);" 
+                                            :disabled="productModal.item.stock && productModal.qty >= productModal.item.stock"
+                                            :class="productModal.item.stock && productModal.qty >= productModal.item.stock ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-2xs'"
+                                            type="button" 
+                                            class="w-8 h-8 rounded-lg transition flex items-center justify-center font-bold text-xs">+</button>
+                                </div>
+                            </template>
 
-                            <button @click="submitModalToCart()" 
+                            <button x-show="!productModal.item.is_sold_out"
+                                    @click="submitModalToCart()" 
                                     type="button" 
                                     class="grow bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                                 <span>Tambah ke Keranjang</span>
                                 <span class="text-blue-100 font-semibold" x-show="productModal.item.price" x-text="`• Rp ${new Intl.NumberFormat('id-ID').format(productModal.item.price * productModal.qty)}`"></span>
+                            </button>
+
+                            <button x-show="productModal.item.is_sold_out"
+                                    type="button" 
+                                    disabled
+                                    class="w-full bg-slate-100 text-slate-400 font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-1.5 cursor-not-allowed select-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                <span>Menu Sedang Habis (Sold Out)</span>
                             </button>
                         </div>
                     </div>
@@ -855,15 +897,20 @@
                             pickup_batch: this.productModal.pickupBatch
                         })
                     })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.cart) {
-                            this.cart = data.cart;
+                    .then(res => res.json().then(data => ({ status: res.status, ok: res.ok, body: data })))
+                    .then(result => {
+                        if (result.ok && result.body.cart) {
+                            this.cart = result.body.cart;
                             this.closeProductModal();
                             this.showToast('✅ Ditambahkan ke keranjang');
+                        } else {
+                            this.showToast('⚠️ ' + (result.body.message || 'Gagal menambahkan pesanan'));
                         }
                     })
-                    .catch(err => console.error(err));
+                    .catch(err => {
+                        console.error(err);
+                        this.showToast('⚠️ Terjadi kesalahan jaringan');
+                    });
                 },
 
                 updateCartQty(cartKey, newQty) {
@@ -880,10 +927,13 @@
                             quantity: newQty
                         })
                     })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.cart) {
-                            this.cart = data.cart;
+                    .then(res => res.json().then(data => ({ status: res.status, ok: res.ok, body: data })))
+                    .then(result => {
+                        if (result.body && result.body.cart) {
+                            this.cart = result.body.cart;
+                        }
+                        if (!result.ok && result.body.message) {
+                            this.showToast('⚠️ ' + result.body.message);
                         }
                     })
                     .catch(err => console.error(err));

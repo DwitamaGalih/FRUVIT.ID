@@ -13,20 +13,20 @@ class HomeController extends Controller
     {
         $categories = Category::where('is_active', true)
             ->withCount(['products' => function ($query) {
-                $query->where('is_available', true);
+                $query->where('is_available', true)->where('stock', '>', 0);
             }])
             ->orderBy('sort_order')
             ->get();
 
-        $bestSellers = Product::where('is_available', true)
-            ->whereNotNull('badge')
+        $bestSellers = Product::whereNotNull('badge')
             ->with('category')
+            ->orderByRaw('CASE WHEN is_available = 1 AND stock > 0 THEN 0 ELSE 1 END')
             ->orderBy('sort_order')
             ->take(6)
             ->get();
 
-        $allProducts = Product::where('is_available', true)
-            ->with('category')
+        $allProducts = Product::with('category')
+            ->orderByRaw('CASE WHEN is_available = 1 AND stock > 0 THEN 0 ELSE 1 END')
             ->orderBy('sort_order')
             ->get();
 

@@ -22,14 +22,14 @@ class CartService
         foreach ($cart as $key => $item) {
             $productId = $item['product_id'] ?? (is_numeric($key) ? (int) $key : 0);
             $product = Product::find($productId);
-            if (! $product || ! $product->is_available) {
-                // Item no longer exists or unavailable, remove from cart
+            if (! $product || ! $product->is_available || $product->stock <= 0) {
+                // Item no longer exists or unavailable/sold out, remove from cart
                 unset($cart[$key]);
 
                 continue;
             }
 
-            $qty = max(1, (int) $item['quantity']);
+            $qty = min($product->stock, max(1, (int) $item['quantity']));
             $itemSubtotal = $product->price * $qty;
             $subtotal += $itemSubtotal;
             $count += $qty;
@@ -40,6 +40,7 @@ class CartService
                 'name' => $product->name,
                 'price' => (float) $product->price,
                 'formatted_price' => $product->formatted_price,
+                'stock' => (int) $product->stock,
                 'quantity' => $qty,
                 'subtotal' => (float) $itemSubtotal,
                 'formatted_subtotal' => 'Rp '.number_format($itemSubtotal, 0, ',', '.'),
@@ -77,11 +78,27 @@ class CartService
         ?string $pickupBatch = null
     ): array {
         $product = Product::findOrFail($productId);
-        if (! $product->is_available) {
+        if (! $product->is_available || $product->stock <= 0) {
             throw new \Exception("Produk {$product->name} saat ini sedang habis.");
         }
 
         $cart = Session::get(self::SESSION_KEY, []);
+
+        // Hitung total kuantitas produk ini yang sudah ada di keranjang
+        $existingQtyForProduct = 0;
+        foreach ($cart as $existingItem) {
+            if (($existingItem['product_id'] ?? null) == $productId) {
+                $existingQtyForProduct += (int) ($existingItem['quantity'] ?? 0);
+            }
+        }
+
+        if (($existingQtyForProduct + $quantity) > $product->stock) {
+            $availableToAdd = max(0, $product->stock - $existingQtyForProduct);
+            if ($availableToAdd <= 0) {
+                throw new \Exception("Maaf, stok {$product->name} sudah maksimal berada di keranjang Anda (Tersedia: {$product->stock}).");
+            }
+            throw new \Exception("Maaf, sisa stok {$product->name} yang dapat dipesan hanya {$availableToAdd} lagi.");
+        }
 
         // Unique key for product + add-on configuration + pickup schedule
         $key = (string) $productId;
@@ -135,7 +152,30 @@ class CartService
         if ($quantity <= 0) {
             unset($cart[$key]);
         } elseif (isset($cart[$key])) {
-            $cart[$key]['quantity'] = $quantity;
+            $productId = $cart[$key]['product_id'] ?? (is_numeric($key) ? (int) $key : 0);
+            $product = Product::find($productId);
+
+            if ($product) {
+                // Hitung total item produk ini dari entri keranjang LAINNYA
+                $otherQty = 0;
+                foreach ($cart as $k => $item) {
+                    if ((string) $k !== $key && (($item['product_id'] ?? null) == $productId)) {
+                        $otherQty += (int) ($item['quantity'] ?? 0);
+                    }
+                }
+
+                $maxAllowed = max(0, $product->stock - $otherQty);
+                $finalQty = min($quantity, $maxAllowed);
+
+                if ($finalQty <= 0 && $quantity > 0) {
+                    throw new \Exception("Stok {$product->name} sudah tidak mencukupi.");
+                }
+
+                $cart[$key]['quantity'] = $finalQty;
+            } else {
+                $cart[$key]['quantity'] = $quantity;
+            }
+
             if ($notes !== null) {
                 $cart[$key]['notes'] = $notes;
             }

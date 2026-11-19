@@ -47,15 +47,26 @@ class CartController extends Controller
         $pickupDay = $validated['pickup_day'] ?? null;
         $pickupBatch = $validated['pickup_batch'] ?? null;
 
-        $cart = $this->cartService->add(
-            (int) $validated['product_id'],
-            $quantity,
-            $notes,
-            $sugarLevel,
-            $jellyTopping,
-            $pickupDay,
-            $pickupBatch
-        );
+        try {
+            $cart = $this->cartService->add(
+                (int) $validated['product_id'],
+                $quantity,
+                $notes,
+                $sugarLevel,
+                $jellyTopping,
+                $pickupDay,
+                $pickupBatch
+            );
+        } catch (\Exception $e) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -79,11 +90,23 @@ class CartController extends Controller
 
         $cartKey = $validated['cart_key'] ?? $validated['product_id'];
 
-        $cart = $this->cartService->update(
-            $cartKey,
-            (int) $validated['quantity'],
-            $validated['notes'] ?? null
-        );
+        try {
+            $cart = $this->cartService->update(
+                $cartKey,
+                (int) $validated['quantity'],
+                $validated['notes'] ?? null
+            );
+        } catch (\Exception $e) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'cart' => $this->cartService->getCart(),
+                ], 422);
+            }
+
+            return redirect()->route('cart.index')->with('error', $e->getMessage());
+        }
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
