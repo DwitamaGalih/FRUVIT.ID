@@ -62,6 +62,9 @@
                     $itemsDetail = [];
                     foreach ($order->items as $it) {
                         $addons = [];
+                        if ($it->pickup_day && $it->pickup_batch) {
+                            $addons[] = 'Jadwal: ' . $it->pickup_day . ' (' . $it->pickup_batch . ')';
+                        }
                         if ($it->sugar_level) {
                             $addons[] = 'Gula: ' . $it->sugar_level;
                         }

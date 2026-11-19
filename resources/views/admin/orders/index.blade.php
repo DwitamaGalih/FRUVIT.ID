@@ -100,10 +100,20 @@
                                         </a>
                                     </td>
                                     <td class="py-3 px-4 max-w-xs">
-                                        <div class="text-slate-600 truncate">
+                                        <div class="text-slate-700 font-semibold truncate">
                                             {{ $order->items->pluck('product_name')->join(', ') }}
                                         </div>
-                                        <div class="text-[10px] text-slate-400">{{ $order->items->sum('quantity') }} porsi</div>
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                            <span class="text-[10px] text-slate-400">{{ $order->items->sum('quantity') }} porsi</span>
+                                            @php
+                                                $firstSchedule = $order->items->first(fn($it) => !empty($it->pickup_day));
+                                            @endphp
+                                            @if($firstSchedule)
+                                                <span class="inline-block px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-100 text-blue-800">
+                                                    📅 {{ $firstSchedule->pickup_day }} ({{ $firstSchedule->pickup_batch }})
+                                                </span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="py-3 px-4 text-slate-600 font-medium">
                                         <div>{{ $order->delivery_method === 'delivery' ? '🛵 Delivery' : '🏪 Pickup' }}</div>
