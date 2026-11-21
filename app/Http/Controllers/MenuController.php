@@ -36,7 +36,7 @@ class MenuController extends Controller
         }
 
         $products = $productsQuery
-            ->orderByRaw('CASE WHEN is_available = 1 AND stock > 0 THEN 0 ELSE 1 END')
+            ->orderByRaw('CASE WHEN is_available = true AND stock > 0 THEN 0 ELSE 1 END')
             ->orderBy('sort_order')
             ->get();
         $storeStatus = Setting::get('store_status', 'open');
