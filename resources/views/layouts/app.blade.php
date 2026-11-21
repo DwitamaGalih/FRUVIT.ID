@@ -631,21 +631,35 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div x-show="toast.show" 
-         x-cloak
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-4"
-         class="fixed top-20 right-4 z-50 max-w-xs w-full bg-slate-900 text-white p-3.5 rounded-2xl shadow-xl flex items-center gap-2.5 border border-slate-800">
-        <div class="w-7 h-7 bg-blue-600 rounded-lg text-white flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-circle-check text-sm"></i>
+    <!-- Toast Notification (Always Perfectly Centered on Mobile & Web) -->
+    <div class="fixed top-20 sm:top-24 inset-x-0 z-50 flex justify-center pointer-events-none px-4">
+        <div x-show="toast.show" 
+             x-cloak
+             x-transition:enter="transition cubic-bezier(0.16, 1, 0.3, 1) duration-300"
+             x-transition:enter-start="opacity-0 -translate-y-4 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
+             class="pointer-events-auto bg-slate-900/95 text-white py-2.5 px-4 sm:px-5 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700/60 backdrop-blur-md max-w-sm sm:max-w-md w-auto">
+            <div class="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 shadow-xs"
+                 :class="toast.isWarning ? 'bg-amber-500 text-white' : 'bg-blue-600 text-white'">
+                <template x-if="toast.isWarning">
+                    <i class="fa-solid fa-triangle-exclamation text-xs"></i>
+                </template>
+                <template x-if="!toast.isWarning">
+                    <i class="fa-solid fa-check text-xs font-black"></i>
+                </template>
+            </div>
+            <div class="text-xs sm:text-sm font-semibold text-slate-100 select-none whitespace-nowrap" x-text="toast.message">
+                Ditambahkan ke keranjang
+            </div>
+            <button @click="toast.show = false" 
+                    type="button"
+                    class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800/60 transition cursor-pointer shrink-0 ml-1">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
         </div>
-        <div class="grow text-xs font-semibold truncate" x-text="toast.message">Pesanan ditambahkan!</div>
-        <button @click="toast.show = false" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
     </div>
 
     <!-- Modal Jadwal Pengambilan (Batch Ready) -->
@@ -828,8 +842,10 @@
                 },
                 toast: {
                     show: false,
+                    isWarning: false,
                     message: ''
                 },
+                toastTimeout: null,
 
                 initApp() {
                     this.fetchCart();
@@ -845,9 +861,14 @@
                 },
 
                 showToast(msg) {
-                    this.toast.message = msg;
+                    const isWarn = typeof msg === 'string' && (msg.includes('⚠️') || msg.toLowerCase().includes('maks') || msg.toLowerCase().includes('gagal') || msg.toLowerCase().includes('stok'));
+                    this.toast.isWarning = isWarn;
+                    this.toast.message = typeof msg === 'string' ? msg.replace(/^[✅⚠️❌]\s*/, '') : msg;
                     this.toast.show = true;
-                    setTimeout(() => {
+                    if (this.toastTimeout) {
+                        clearTimeout(this.toastTimeout);
+                    }
+                    this.toastTimeout = setTimeout(() => {
                         this.toast.show = false;
                     }, 3000);
                 },
@@ -900,7 +921,7 @@
                         if (result.ok && result.body.cart) {
                             this.cart = result.body.cart;
                             this.closeProductModal();
-                            this.showToast('✅ Ditambahkan ke keranjang');
+                            this.showToast('Ditambahkan ke keranjang');
                         } else {
                             this.showToast('⚠️ ' + (result.body.message || 'Gagal menambahkan pesanan'));
                         }
