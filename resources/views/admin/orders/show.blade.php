@@ -174,7 +174,7 @@
                         <div class="space-y-3">
                             <div class="relative rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
                                  @click="imageModal = true">
-                                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" class="w-full h-48 object-cover group-hover:scale-105 transition">
+                                <img src="{{ $order->payment_proof_url }}" alt="Bukti Transfer" class="w-full h-48 object-cover group-hover:scale-105 transition">
                                 <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold">
                                     🔍 Klik untuk Memperbesar
                                 </div>
@@ -223,7 +223,7 @@
              class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-xs"
              @click="imageModal = false">
             <div class="relative max-w-2xl w-full bg-white rounded-3xl overflow-hidden p-2" @click.stop>
-                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer Zoom" class="w-full h-auto max-h-[85vh] object-contain rounded-2xl">
+                <img src="{{ $order->payment_proof_url }}" alt="Bukti Transfer Zoom" class="w-full h-auto max-h-[85vh] object-contain rounded-2xl">
                 <button @click="imageModal = false" class="absolute top-4 right-4 bg-slate-900/80 text-white p-2 rounded-full hover:bg-slate-900">&times;</button>
             </div>
         </div>

@@ -118,6 +118,19 @@ class Order extends Model
         };
     }
 
+    public function getPaymentProofUrlAttribute(): ?string
+    {
+        if (! $this->payment_proof) {
+            return null;
+        }
+
+        if (str_starts_with($this->payment_proof, 'data:') || str_starts_with($this->payment_proof, 'http')) {
+            return $this->payment_proof;
+        }
+
+        return asset('storage/'.$this->payment_proof);
+    }
+
     /**
      * Generate WhatsApp confirmation message link
      */

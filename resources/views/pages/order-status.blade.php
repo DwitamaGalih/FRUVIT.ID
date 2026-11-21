@@ -174,7 +174,7 @@
 
                 @if($order->payment_proof)
                     <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center gap-3">
-                        <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
+                        <img src="{{ $order->payment_proof_url }}" alt="Bukti" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
                         <div class="text-xs">
                             <div class="font-bold text-slate-800">Bukti Transfer Terunggah</div>
                             <div class="text-slate-400">Status: <span class="font-bold text-amber-600">{{ $order->payment_status_label }}</span></div>

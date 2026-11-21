@@ -8,6 +8,8 @@ use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -53,7 +55,11 @@ class AdminProductController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            try {
+                DB::statement('ALTER TABLE products MODIFY image LONGTEXT NULL');
+            } catch (\Throwable $e) {
+            }
+            $imagePath = $this->processUploadedImage($request->file('image'));
         }
 
         Product::create([
@@ -95,10 +101,21 @@ class AdminProductController extends Controller
 
         $imagePath = $product->image;
         if ($request->hasFile('image')) {
-            if ($product->image && Storage::disk('public')->exists($product->image)) {
-                Storage::disk('public')->delete($product->image);
+            if ($product->image && ! str_starts_with($product->image, 'data:')) {
+                try {
+                    if (Storage::disk('public')->exists($product->image)) {
+                        Storage::disk('public')->delete($product->image);
+                    }
+                } catch (\Throwable $e) {
+                }
             }
-            $imagePath = $request->file('image')->store('products', 'public');
+
+            try {
+                DB::statement('ALTER TABLE products MODIFY image LONGTEXT NULL');
+            } catch (\Throwable $e) {
+            }
+
+            $imagePath = $this->processUploadedImage($request->file('image'));
         }
 
         $product->update([
@@ -129,12 +146,65 @@ class AdminProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->image && Storage::disk('public')->exists($product->image)) {
-            Storage::disk('public')->delete($product->image);
+        if ($product->image && ! str_starts_with($product->image, 'data:')) {
+            try {
+                if (Storage::disk('public')->exists($product->image)) {
+                    Storage::disk('public')->delete($product->image);
+                }
+            } catch (\Throwable $e) {
+            }
         }
 
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    /**
+     * Convert and optimize uploaded image to Base64 Data URI for serverless cloud persistence
+     */
+    private function processUploadedImage(UploadedFile $file, int $maxWidth = 1200): string
+    {
+        $mime = $file->getMimeType() ?: 'image/jpeg';
+        $realPath = $file->getRealPath();
+        $imageData = null;
+
+        if (extension_loaded('gd') && function_exists('imagecreatefromstring')) {
+            try {
+                $raw = file_get_contents($realPath);
+                $src = @imagecreatefromstring($raw);
+                if ($src !== false) {
+                    $width = imagesx($src);
+                    $height = imagesy($src);
+
+                    if ($width > $maxWidth) {
+                        $newWidth = $maxWidth;
+                        $newHeight = (int) ($height * ($maxWidth / $width));
+                        $dst = imagecreatetruecolor($newWidth, $newHeight);
+
+                        imagealphablending($dst, false);
+                        imagesavealpha($dst, true);
+
+                        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                        imagedestroy($src);
+                        $src = $dst;
+                    }
+
+                    ob_start();
+                    imagejpeg($src, null, 80);
+                    $imageData = ob_get_clean();
+                    imagedestroy($src);
+                    $mime = 'image/jpeg';
+                }
+            } catch (\Throwable $e) {
+                $imageData = null;
+            }
+        }
+
+        if (! $imageData) {
+            $imageData = file_get_contents($realPath);
+        }
+
+        return "data:{$mime};base64,".base64_encode($imageData);
     }
 }
