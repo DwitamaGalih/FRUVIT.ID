@@ -514,7 +514,7 @@
                                             class="p-2 rounded-lg text-left border transition cursor-pointer select-none"
                                             :class="productModal.pickupBatch === 'Batch 2' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                         <div class="text-[11px] font-bold">Batch 2</div>
-                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? '03.00-04.00 AM' : 'Pukul 02.00 AM'"></div>
+                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? '03.00 PM' : 'Pukul 02.00 PM'"></div>
                                     </button>
                                 </div>
                             </div>
