@@ -724,7 +724,7 @@
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                                    <span><strong>Batch 2:</strong> Ready pukul 02.00 AM</span>
+                                    <span><strong>Batch 2:</strong> Ready pukul 02.00 PM</span>
                                 </li>
                             </ul>
                         </div>
