@@ -66,11 +66,6 @@
             </button>
         </form>
 
-        <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-[11px] text-emerald-900 text-center">
-            <strong>Default Kredensial Admin:</strong><br>
-            Email: <span class="font-mono font-bold">admin@fruvit.id</span> | Password: <span class="font-mono font-bold">admin123</span>
-        </div>
-
         <div class="text-center pt-2">
             <a href="{{ route('home') }}" class="text-xs font-bold text-slate-500 hover:text-emerald-600">
                 &larr; Kembali ke Website Utama
