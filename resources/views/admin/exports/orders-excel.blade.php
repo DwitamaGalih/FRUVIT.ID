@@ -24,16 +24,17 @@
 <body>
     <table>
         <tr>
-            <td colspan="12" class="header-title">FRUVIT.ID - LAPORAN PENJUALAN PESANAN</td>
+            <td colspan="15" class="header-title">FRUVIT.ID - LAPORAN PENJUALAN PESANAN</td>
         </tr>
         <tr>
-            <td colspan="12" class="header-sub">Waktu Unduh: {{ now()->translatedFormat('d F Y, H:i:s') }} WIB | Total Data: {{ $orders->count() }} Pesanan</td>
+            <td colspan="15" class="header-sub">Waktu Unduh: {{ now()->translatedFormat('d F Y, H:i:s') }} WIB | Total Data: {{ $orders->count() }} Pesanan</td>
         </tr>
-        <tr><td colspan="12"></td></tr>
+        <tr><td colspan="15"></td></tr>
         <thead>
             <tr>
                 <th class="text-center" style="width: 40px;">No</th>
                 <th style="width: 140px;">No. Pesanan</th>
+                <th style="width: 90px;">Batch PO</th>
                 <th style="width: 130px;">Tanggal & Waktu</th>
                 <th style="width: 140px;">Nama Pelanggan</th>
                 <th style="width: 120px;">No. WhatsApp</th>
@@ -79,6 +80,7 @@
                 <tr>
                     <td class="text-center">{{ $idx + 1 }}</td>
                     <td class="bold text-num">{{ $order->order_number }}</td>
+                    <td class="bold text-center" style="color: #b45309;">{{ $order->po_batch ?: '-' }}</td>
                     <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                     <td>{{ $order->customer_name }}</td>
                     <td class="text-num">{{ $order->customer_phone }}</td>
@@ -103,16 +105,16 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="14" class="text-center" style="padding: 20px;">Tidak ada data pesanan pada filter yang dipilih.</td>
+                    <td colspan="15" class="text-center" style="padding: 20px;">Tidak ada data pesanan pada filter yang dipilih.</td>
                 </tr>
             @endforelse
             <tr class="total-row">
-                <td colspan="7" class="text-right bold">TOTAL KESELURUHAN ({{ $orders->count() }} Pesanan):</td>
+                <td colspan="8" class="text-right bold">TOTAL KESELURUHAN ({{ $orders->count() }} Pesanan):</td>
                 <td colspan="3" class="currency bold">Rp {{ number_format($totalRevenueAll, 0, ',', '.') }}</td>
                 <td colspan="4"></td>
             </tr>
             <tr class="total-row" style="background-color: #dcfce7;">
-                <td colspan="7" class="text-right bold" style="color: #15803d;">TOTAL PENDAPATAN LUNAS (PAID):</td>
+                <td colspan="8" class="text-right bold" style="color: #15803d;">TOTAL PENDAPATAN LUNAS (PAID):</td>
                 <td colspan="3" class="currency bold" style="color: #15803d;">Rp {{ number_format($totalPaidOnly, 0, ',', '.') }}</td>
                 <td colspan="4"></td>
             </tr>

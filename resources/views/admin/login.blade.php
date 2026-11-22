@@ -36,9 +36,10 @@
                 <input type="email" 
                        id="email" 
                        name="email" 
-                       value="{{ old('email', 'admin@fruvit.id') }}" 
+                       value="{{ old('email') }}" 
                        required 
-                       placeholder="admin@fruvit.id" 
+                       autocomplete="email"
+                       placeholder="Masukkan email admin..." 
                        class="w-full text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
             </div>
 
@@ -47,15 +48,15 @@
                 <input type="password" 
                        id="password" 
                        name="password" 
-                       value="admin123"
                        required 
-                       placeholder="••••••••" 
+                       autocomplete="current-password"
+                       placeholder="Masukkan kata sandi..." 
                        class="w-full text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
             </div>
 
             <div class="flex items-center justify-between text-xs">
                 <label class="flex items-center gap-2 cursor-pointer text-slate-600">
-                    <input type="checkbox" name="remember" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" checked>
+                    <input type="checkbox" name="remember" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
                     <span>Ingat saya</span>
                 </label>
             </div>

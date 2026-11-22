@@ -66,15 +66,76 @@
 
         <!-- Recent Orders Table -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-4 gap-3">
                 <div>
                     <h2 class="text-base font-extrabold text-slate-900">Pesanan Masuk Terbaru</h2>
                     <p class="text-xs text-slate-500 mt-0.5">Daftar transaksi pesanan terakhir di stand FRUVIT.ID</p>
                 </div>
-                <a href="{{ route('admin.orders.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700">
-                    Buka Semua &rarr;
-                </a>
+                
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Dropdown Filter PO -->
+                    <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/90 rounded-xl p-1 text-xs">
+                        <span class="text-[11px] font-bold text-slate-500 pl-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-boxes-stacked text-amber-600 text-xs"></i>
+                            <span>Filter PO:</span>
+                        </span>
+                        <select onchange="window.location.href = this.value" 
+                                class="text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer">
+                            <option value="{{ route('admin.dashboard', ['po' => 'all']) }}" {{ ($po ?? 'all') === 'all' ? 'selected' : '' }}>
+                                Semua PO
+                            </option>
+                            @foreach($allPos ?? [] as $poItem)
+                                <option value="{{ route('admin.dashboard', ['po' => $poItem]) }}" {{ ($po ?? '') === $poItem ? 'selected' : '' }}>
+                                    📦 {{ $poItem }}
+                                </option>
+                            @endforeach
+                            <option value="{{ route('admin.dashboard', ['po' => 'none']) }}" {{ ($po ?? '') === 'none' ? 'selected' : '' }}>
+                                Belum Masuk PO
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Tombol Buka Semua Pesanan / Rekap PO -->
+                    <a href="{{ route('admin.orders.index', ['po' => $po ?? 'all']) }}" 
+                       class="text-xs font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-2 rounded-xl transition flex items-center gap-1 shadow-2xs">
+                        <span>Buka Semua</span>
+                        @if(($po ?? 'all') !== 'all')
+                            <span class="font-extrabold text-emerald-800">({{ $po }})</span>
+                        @endif
+                        <span>&rarr;</span>
+                    </a>
+                </div>
             </div>
+
+            <!-- Ringkasan Rekap PO jika sedang memfilter PO tertentu -->
+            @if(($po ?? 'all') !== 'all')
+                <div class="mb-4 p-3 bg-amber-50/70 border border-amber-200/80 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
+                            📦
+                        </div>
+                        <div>
+                            <div class="font-black text-slate-900">
+                                Rekap Kelompok: <span class="text-amber-700 font-extrabold">{{ $po === 'none' ? 'Belum Masuk PO' : $po }}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500">
+                                Menampilkan transaksi pesanan khusus pada kelompok ini
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs font-bold">
+                        <div class="text-slate-700">
+                            Pesanan: <span class="text-slate-900 font-black">{{ $poSummary['count'] ?? $recentOrders->count() }}</span>
+                        </div>
+                        <div class="text-emerald-700">
+                            Total Nilai: <span class="font-black">Rp {{ number_format($poSummary['total'] ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                        <a href="{{ route('admin.dashboard') }}" class="text-[11px] text-slate-400 hover:text-slate-600 underline cursor-pointer">
+                            ✕ Reset Filter
+                        </a>
+                    </div>
+                </div>
+            @endif
 
             @if($recentOrders->isEmpty())
                 <div class="text-center py-8 text-slate-400 text-xs">
@@ -98,9 +159,16 @@
                             @foreach($recentOrders as $order)
                                 <tr class="hover:bg-slate-50/70 transition">
                                     <td class="py-3 px-4 font-mono font-bold text-slate-900">
-                                        <a href="{{ route('admin.orders.show', $order) }}" class="text-emerald-600 hover:underline">
-                                            {{ $order->order_number }}
-                                        </a>
+                                        <div class="flex flex-col">
+                                            <a href="{{ route('admin.orders.show', $order) }}" class="text-emerald-600 hover:underline">
+                                                {{ $order->order_number }}
+                                            </a>
+                                            @if($order->po_batch)
+                                                <span class="inline-flex items-center gap-1 mt-0.5 px-1.5 py-0.2 rounded text-[9px] font-black bg-amber-100 text-amber-800 border border-amber-200 w-fit">
+                                                    📦 {{ $order->po_batch }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="py-3 px-4">
                                         <div class="font-bold text-slate-800">{{ $order->customer_name }}</div>

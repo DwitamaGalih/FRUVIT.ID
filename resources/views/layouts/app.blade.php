@@ -463,35 +463,102 @@
 
                         <p class="text-xs text-slate-500 leading-relaxed" x-text="productModal.item.description"></p>
 
-                        <!-- Jadwal Pengambilan Add-on Selection (Senin / Kamis & Batch 1 / Batch 2) -->
-                        <div class="p-3.5 bg-blue-50/60 rounded-xl border border-blue-100 space-y-3">
+                        <!-- Jadwal Pengambilan Add-on Selection (Datepicker Kalender Senin & Kamis) -->
+                        <div class="p-3.5 bg-blue-50/50 rounded-2xl border border-blue-100 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-clock text-blue-600 text-xs"></i>
-                                    <span>Jadwal Pengambilan</span>
+                                    <i class="fa-solid fa-calendar-days text-blue-600 text-xs"></i>
+                                    <span>Pilih Tanggal Pengambilan</span>
                                 </span>
-                                <span class="text-[10px] text-blue-600 font-semibold" x-text="`${productModal.pickupDay} • ${productModal.pickupBatch}`"></span>
+                                <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full" x-text="`${productModal.pickupDayName} • ${productModal.pickupBatch}`"></span>
                             </div>
 
-                            <!-- Pilihan Hari: Senin / Kamis -->
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-600 block mb-1.5">Pilih Hari:</label>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button type="button"
-                                            @click="productModal.pickupDay = 'Senin'"
-                                            class="py-2 px-2 rounded-lg text-[11px] font-bold border transition text-center cursor-pointer select-none flex items-center justify-center gap-1.5"
-                                            :class="productModal.pickupDay === 'Senin' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
-                                        <i class="fa-regular fa-calendar-check text-xs"></i>
-                                        <span>Senin</span>
-                                    </button>
-                                    <button type="button"
-                                            @click="productModal.pickupDay = 'Kamis'"
-                                            class="py-2 px-2 rounded-lg text-[11px] font-bold border transition text-center cursor-pointer select-none flex items-center justify-center gap-1.5"
-                                            :class="productModal.pickupDay === 'Kamis' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
-                                        <i class="fa-regular fa-calendar-check text-xs"></i>
-                                        <span>Kamis</span>
-                                    </button>
+                            <!-- Kalender Widget (Pilihan Khusus Senin & Kamis) -->
+                            <div class="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs">
+                                
+                                <!-- Header Bulan & Navigasi -->
+                                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+                                    <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                        <i class="fa-regular fa-calendar text-blue-600 text-xs"></i>
+                                        <span x-text="currentMonthYear"></span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <button type="button" 
+                                                @click="prevMonth()" 
+                                                :disabled="isPrevMonthDisabled"
+                                                :class="isPrevMonthDisabled ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:bg-slate-100 cursor-pointer'"
+                                                class="w-7 h-7 rounded-lg flex items-center justify-center transition"
+                                                title="Bulan sebelumnya">
+                                            <i class="fa-solid fa-chevron-left text-[11px]"></i>
+                                        </button>
+                                        <button type="button" 
+                                                @click="nextMonth()" 
+                                                class="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-600 flex items-center justify-center transition cursor-pointer"
+                                                title="Bulan berikutnya">
+                                            <i class="fa-solid fa-chevron-right text-[11px]"></i>
+                                        </button>
+                                    </div>
                                 </div>
+
+                                <!-- Nama Hari dalam Seminggu (Senin & Kamis Diberi Tanda Khusus) -->
+                                <div class="grid grid-cols-7 gap-1 text-center mb-1 text-[10px] font-bold">
+                                    <div class="text-slate-400">Min</div>
+                                    <div class="text-blue-600 font-extrabold flex flex-col items-center">
+                                        <span>Sen</span>
+                                        <span class="w-1 h-1 bg-blue-600 rounded-full mt-0.5"></span>
+                                    </div>
+                                    <div class="text-slate-400">Sel</div>
+                                    <div class="text-slate-400">Rab</div>
+                                    <div class="text-blue-600 font-extrabold flex flex-col items-center">
+                                        <span>Kam</span>
+                                        <span class="w-1 h-1 bg-blue-600 rounded-full mt-0.5"></span>
+                                    </div>
+                                    <div class="text-slate-400">Jum</div>
+                                    <div class="text-slate-400">Sab</div>
+                                </div>
+
+                                <!-- Grid Tanggal -->
+                                <div class="grid grid-cols-7 gap-1 text-center text-xs">
+                                    <template x-for="(item, idx) in calDays" :key="idx">
+                                        <div class="aspect-square flex items-center justify-center p-0.5">
+                                            
+                                            <!-- Hari yang BISA dipilih (Hanya Hari Senin & Kamis) -->
+                                            <template x-if="item.isCurrentMonth && item.isSelectable">
+                                                <button type="button"
+                                                        @click="selectCalendarDate(item)"
+                                                        class="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold transition cursor-pointer select-none"
+                                                        :class="productModal.pickupDate === item.dateStr 
+                                                            ? 'bg-blue-600 text-white font-black shadow-md scale-105 ring-2 ring-blue-300' 
+                                                            : 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-600 hover:text-white'">
+                                                    <span x-text="item.day"></span>
+                                                </button>
+                                            </template>
+
+                                            <!-- Hari yang TIDAK bisa dipilih (Bukan Senin/Kamis atau sudah lewat) -->
+                                            <template x-if="item.isCurrentMonth && !item.isSelectable">
+                                                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs text-slate-300 cursor-not-allowed select-none"
+                                                      x-text="item.day"></span>
+                                            </template>
+
+                                            <!-- Tanggal dari bulan sebelumnya / berikutnya -->
+                                            <template x-if="!item.isCurrentMonth">
+                                                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs text-slate-200 cursor-default select-none"
+                                                      x-text="item.day"></span>
+                                            </template>
+
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Bar Keterangan Tanggal Terpilih -->
+                                <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>
+                                        <span>Khusus hari <strong class="text-blue-700">Senin & Kamis</strong></span>
+                                    </div>
+                                    <div class="font-bold text-blue-600 truncate max-w-[170px]" x-text="productModal.pickupDay"></div>
+                                </div>
+
                             </div>
 
                             <!-- Pilihan Batch Jam Pengambilan -->
@@ -500,17 +567,17 @@
                                 <div class="grid grid-cols-2 gap-1.5">
                                     <button type="button"
                                             @click="productModal.pickupBatch = 'Batch 1'"
-                                            class="p-2 rounded-lg text-left border transition cursor-pointer select-none"
+                                            class="p-2 rounded-xl text-left border transition cursor-pointer select-none"
                                             :class="productModal.pickupBatch === 'Batch 1' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                         <div class="text-[11px] font-bold">Batch 1</div>
-                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 1' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? 'Pukul 11.00 AM' : 'Pukul 09.00 AM'"></div>
+                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 1' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDayName === 'Senin' ? 'Pukul 11.00 AM' : 'Pukul 09.00 AM'"></div>
                                     </button>
                                     <button type="button"
                                             @click="productModal.pickupBatch = 'Batch 2'"
-                                            class="p-2 rounded-lg text-left border transition cursor-pointer select-none"
+                                            class="p-2 rounded-xl text-left border transition cursor-pointer select-none"
                                             :class="productModal.pickupBatch === 'Batch 2' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                         <div class="text-[11px] font-bold">Batch 2</div>
-                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDay === 'Senin' ? 'Pukul 03.00 PM' : 'Pukul 02.00 PM'"></div>
+                                        <div class="text-[9px] mt-0.5" :class="productModal.pickupBatch === 'Batch 2' ? 'text-blue-100' : 'text-slate-500'" x-text="productModal.pickupDayName === 'Senin' ? 'Pukul 03.00 PM' : 'Pukul 02.00 PM'"></div>
                                     </button>
                                 </div>
                             </div>
@@ -836,16 +903,159 @@
                     notes: '',
                     sugarLevel: 'Normal sugar',
                     jellyTopping: 'Normal jelly',
-                    pickupDay: 'Senin',
+                    pickupDate: '',
+                    pickupDay: '',
+                    pickupDayName: 'Senin',
                     pickupBatch: 'Batch 1',
                     item: {}
                 },
+                calYear: new Date().getFullYear(),
+                calMonth: new Date().getMonth(),
+                calDays: [],
                 toast: {
                     show: false,
                     isWarning: false,
                     message: ''
                 },
                 toastTimeout: null,
+
+                get currentMonthYear() {
+                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                    return `${months[this.calMonth]} ${this.calYear}`;
+                },
+
+                get isPrevMonthDisabled() {
+                    const now = new Date();
+                    return this.calYear < now.getFullYear() || (this.calYear === now.getFullYear() && this.calMonth <= now.getMonth());
+                },
+
+                prevMonth() {
+                    if (this.isPrevMonthDisabled) return;
+                    if (this.calMonth === 0) {
+                        this.calMonth = 11;
+                        this.calYear--;
+                    } else {
+                        this.calMonth--;
+                    }
+                    this.renderCalendar();
+                },
+
+                nextMonth() {
+                    if (this.calMonth === 11) {
+                        this.calMonth = 0;
+                        this.calYear++;
+                    } else {
+                        this.calMonth++;
+                    }
+                    this.renderCalendar();
+                },
+
+                formatDateIso(d) {
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    return `${y}-${m}-${day}`;
+                },
+
+                formatPickupDateLabel(d) {
+                    const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                    return `${dayNames[d.getDay()]}, ${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                },
+
+                initCalendar() {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    // Cari hari Senin (1) atau Kamis (4) terdekat dari hari ini
+                    let target = new Date(today);
+                    for (let i = 0; i < 14; i++) {
+                        const check = new Date(today);
+                        check.setDate(today.getDate() + i);
+                        if (check.getDay() === 1 || check.getDay() === 4) {
+                            target = check;
+                            break;
+                        }
+                    }
+
+                    this.calYear = target.getFullYear();
+                    this.calMonth = target.getMonth();
+
+                    const dayOfWeek = target.getDay();
+                    this.productModal.pickupDayName = (dayOfWeek === 1) ? 'Senin' : 'Kamis';
+                    this.productModal.pickupDate = this.formatDateIso(target);
+                    this.productModal.pickupDay = this.formatPickupDateLabel(target);
+
+                    this.renderCalendar();
+                },
+
+                renderCalendar() {
+                    const year = this.calYear;
+                    const month = this.calMonth;
+                    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Min, 1 = Sen
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    const days = [];
+
+                    // Hari dari bulan sebelumnya
+                    for (let i = firstDayIndex - 1; i >= 0; i--) {
+                        days.push({
+                            day: daysInPrevMonth - i,
+                            isCurrentMonth: false,
+                            isSelectable: false,
+                            dateStr: ''
+                        });
+                    }
+
+                    // Hari pada bulan saat ini
+                    for (let d = 1; d <= daysInMonth; d++) {
+                        const dateObj = new Date(year, month, d);
+                        dateObj.setHours(0, 0, 0, 0);
+                        const dayOfWeek = dateObj.getDay();
+
+                        // HANYA hari Senin (1) dan Kamis (4) serta hari ini atau masa depan
+                        const isMonOrThu = (dayOfWeek === 1 || dayOfWeek === 4);
+                        const isSelectable = isMonOrThu && (dateObj >= today);
+                        const dateStr = this.formatDateIso(dateObj);
+
+                        days.push({
+                            day: d,
+                            year: year,
+                            month: month,
+                            dayOfWeek: dayOfWeek,
+                            isCurrentMonth: true,
+                            isSelectable: isSelectable,
+                            dateStr: dateStr
+                        });
+                    }
+
+                    // Hari dari bulan berikutnya untuk melengkapi baris 7 kolom
+                    const remaining = 7 - (days.length % 7);
+                    if (remaining < 7) {
+                        for (let i = 1; i <= remaining; i++) {
+                            days.push({
+                                day: i,
+                                isCurrentMonth: false,
+                                isSelectable: false,
+                                dateStr: ''
+                            });
+                        }
+                    }
+
+                    this.calDays = days;
+                },
+
+                selectCalendarDate(item) {
+                    if (!item.isSelectable) return;
+                    const dateObj = new Date(item.year, item.month, item.day);
+                    this.productModal.pickupDate = item.dateStr;
+                    this.productModal.pickupDay = this.formatPickupDateLabel(dateObj);
+                    this.productModal.pickupDayName = (item.dayOfWeek === 1) ? 'Senin' : 'Kamis';
+                },
 
                 initApp() {
                     this.fetchCart();
@@ -886,8 +1096,8 @@
                             this.productModal.notes = '';
                             this.productModal.sugarLevel = 'Normal sugar';
                             this.productModal.jellyTopping = 'Normal jelly';
-                            this.productModal.pickupDay = 'Senin';
                             this.productModal.pickupBatch = 'Batch 1';
+                            this.initCalendar();
                             this.productModal.open = true;
                         })
                         .catch(err => console.error(err));

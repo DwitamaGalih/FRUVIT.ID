@@ -7,6 +7,8 @@ use App\Models\Order;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminOrderController extends Controller
@@ -17,6 +19,7 @@ class AdminOrderController extends Controller
         $search = $request->query('search', '');
         $startDate = $request->query('from');
         $endDate = $request->query('to');
+        $po = $request->query('po', 'all');
 
         $query = Order::with('items')->orderBy('created_at', 'desc');
 
@@ -28,11 +31,22 @@ class AdminOrderController extends Controller
             }
         }
 
+        if ($po !== 'all' && ! empty($po)) {
+            if ($po === 'none') {
+                $query->where(function ($q) {
+                    $q->whereNull('po_batch')->orWhere('po_batch', '');
+                });
+            } else {
+                $query->where('po_batch', $po);
+            }
+        }
+
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
                     ->orWhere('customer_name', 'like', "%{$search}%")
-                    ->orWhere('customer_phone', 'like', "%{$search}%");
+                    ->orWhere('customer_phone', 'like', "%{$search}%")
+                    ->orWhere('po_batch', 'like', "%{$search}%");
             });
         }
 
@@ -60,6 +74,7 @@ class AdminOrderController extends Controller
     {
         $status = $request->query('status', 'all');
         $search = $request->query('search', '');
+        $po = $request->query('po', 'all');
 
         $query = Order::with('items')->orderBy('created_at', 'desc');
 
@@ -71,11 +86,22 @@ class AdminOrderController extends Controller
             }
         }
 
+        if ($po !== 'all' && ! empty($po)) {
+            if ($po === 'none') {
+                $query->where(function ($q) {
+                    $q->whereNull('po_batch')->orWhere('po_batch', '');
+                });
+            } else {
+                $query->where('po_batch', $po);
+            }
+        }
+
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
                     ->orWhere('customer_name', 'like', "%{$search}%")
-                    ->orWhere('customer_phone', 'like', "%{$search}%");
+                    ->orWhere('customer_phone', 'like', "%{$search}%")
+                    ->orWhere('po_batch', 'like', "%{$search}%");
             });
         }
 
@@ -90,7 +116,20 @@ class AdminOrderController extends Controller
             'completed' => Order::where('order_status', 'completed')->count(),
         ];
 
-        return view('admin.orders.index', compact('orders', 'status', 'search', 'counts'));
+        $availablePos = [];
+        try {
+            if (Schema::hasColumn('orders', 'po_batch')) {
+                $availablePos = Order::whereNotNull('po_batch')
+                    ->where('po_batch', '!=', '')
+                    ->distinct()
+                    ->pluck('po_batch')
+                    ->sort()
+                    ->values();
+            }
+        } catch (\Throwable $e) {
+        }
+
+        return view('admin.orders.index', compact('orders', 'status', 'search', 'counts', 'po', 'availablePos'));
     }
 
     public function show(Order $order): View
@@ -102,9 +141,17 @@ class AdminOrderController extends Controller
 
     public function updateStatus(Request $request, Order $order): RedirectResponse
     {
+        try {
+            if (! Schema::hasColumn('orders', 'po_batch')) {
+                DB::statement('ALTER TABLE orders ADD COLUMN po_batch VARCHAR(50) NULL AFTER order_status');
+            }
+        } catch (\Throwable $e) {
+        }
+
         $validated = $request->validate([
             'payment_status' => 'nullable|in:unpaid,pending_verification,paid,cancelled',
             'order_status' => 'nullable|in:new,processing,ready,completed,cancelled',
+            'po_batch' => 'nullable|string|max:50',
         ]);
 
         if (isset($validated['payment_status'])) {
@@ -118,9 +165,14 @@ class AdminOrderController extends Controller
             $order->order_status = $validated['order_status'];
         }
 
+        if ($request->has('po_batch')) {
+            $poValue = trim((string) $request->input('po_batch', ''));
+            $order->po_batch = $poValue !== '' ? $poValue : null;
+        }
+
         $order->save();
 
-        return redirect()->back()->with('success', "Status pesanan {$order->order_number} berhasil diperbarui.");
+        return redirect()->back()->with('success', "Status dan kelompok PO pesanan {$order->order_number} berhasil diperbarui.");
     }
 
     public function destroy(Order $order): RedirectResponse

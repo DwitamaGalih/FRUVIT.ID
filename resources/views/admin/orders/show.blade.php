@@ -12,8 +12,16 @@
                 <a href="{{ route('admin.orders.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 mb-1">
                     &larr; Kembali ke Daftar Pesanan
                 </a>
-                <h1 class="text-2xl font-black text-slate-900">Pesanan: {{ $order->order_number }}</h1>
-                <p class="text-xs text-slate-500">Dibuat pada {{ $order->created_at->format('d F Y, H:i:s') }}</p>
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <h1 class="text-2xl font-black text-slate-900">Pesanan: {{ $order->order_number }}</h1>
+                    @if($order->po_batch)
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-800 text-xs font-black border border-amber-300 shadow-2xs">
+                            <i class="fa-solid fa-boxes-stacked text-[11px]"></i>
+                            <span>{{ $order->po_batch }}</span>
+                        </span>
+                    @endif
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Dibuat pada {{ $order->created_at->format('d F Y, H:i:s') }}</p>
             </div>
 
             <div class="flex items-center gap-2">
@@ -158,8 +166,45 @@
                             </select>
                         </div>
 
+                        <!-- Kelompok PO (Pre-Order) -->
+                        <div x-data="{ 
+                            isCustom: {{ !in_array($order->po_batch, ['', null, 'PO 1', 'PO 2', 'PO 3', 'PO 4', 'PO 5', 'PO 6', 'PO 7', 'PO 8', 'PO 9', 'PO 10']) ? 'true' : 'false' }}, 
+                            poValue: '{{ $order->po_batch ?? '' }}' 
+                        }">
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-xs font-bold text-slate-700">Kelompok PO (Pre-Order)</label>
+                                @if($order->po_batch)
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">
+                                        Saat ini: {{ $order->po_batch }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <select @change="if ($event.target.value === '__custom__') { isCustom = true; poValue = ''; } else { isCustom = false; poValue = $event.target.value; }"
+                                    class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-300 bg-white">
+                                <option value="" :selected="!isCustom && poValue === ''">-- Belum Masuk PO --</option>
+                                @foreach(['PO 1', 'PO 2', 'PO 3', 'PO 4', 'PO 5', 'PO 6', 'PO 7', 'PO 8', 'PO 9', 'PO 10'] as $presetPo)
+                                    <option value="{{ $presetPo }}" :selected="!isCustom && poValue === '{{ $presetPo }}'">
+                                        📦 {{ $presetPo }}
+                                    </option>
+                                @endforeach
+                                <option value="__custom__" :selected="isCustom">✏️ Masukkan PO Lainnya...</option>
+                            </select>
+
+                            <!-- Input jika admin memilih PO khusus / custom -->
+                            <div x-show="isCustom" x-cloak class="mt-2">
+                                <input type="text" 
+                                       x-model="poValue" 
+                                       placeholder="Ketik nomor PO (Contoh: PO 11 / PO Spesial)" 
+                                       class="w-full text-xs px-3 py-2 rounded-xl border border-blue-400 bg-blue-50/40 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            </div>
+
+                            <!-- Input tersembunyi yang disubmit ke form -->
+                            <input type="hidden" name="po_batch" :value="poValue">
+                        </div>
+
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-xl transition cursor-pointer">
-                            Perbarui Status
+                            Perbarui Status & PO
                         </button>
                     </form>
                 </div>

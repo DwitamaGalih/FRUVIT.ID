@@ -25,6 +25,7 @@ class Order extends Model
         'payment_proof',
         'payment_confirmed_at',
         'order_status',
+        'po_batch',
     ];
 
     protected $casts = [
