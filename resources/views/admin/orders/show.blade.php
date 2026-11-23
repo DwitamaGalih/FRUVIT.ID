@@ -210,13 +210,21 @@
                 </div>
 
                 <!-- Proof of Payment Card -->
-                <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs">
-                    <h2 class="text-sm font-extrabold text-slate-900 pb-3 border-b border-slate-100 mb-3">
-                        Bukti Pembayaran Pelanggan
-                    </h2>
+                <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs space-y-4" x-data="{ newProofPreview: null, showUploadForm: {{ $order->payment_proof ? 'false' : 'true' }} }">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <h2 class="text-sm font-extrabold text-slate-900">
+                            Bukti Pembayaran Pelanggan
+                        </h2>
+                        @if($order->payment_proof)
+                            <button type="button" @click="showUploadForm = !showUploadForm" class="text-xs text-blue-600 hover:text-blue-700 font-bold cursor-pointer">
+                                <span x-show="!showUploadForm">✏️ Ganti Bukti</span>
+                                <span x-show="showUploadForm" x-cloak>✕ Batal</span>
+                            </button>
+                        @endif
+                    </div>
 
                     @if($order->payment_proof)
-                        <div class="space-y-3">
+                        <div class="space-y-3" x-show="!showUploadForm">
                             <div class="relative rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
                                  @click="imageModal = true">
                                 <img src="{{ $order->payment_proof_url }}" alt="Bukti Transfer" class="w-full h-48 object-cover group-hover:scale-105 transition">
@@ -237,11 +245,51 @@
                                 </form>
                             @endif
                         </div>
-                    @else
-                        <div class="text-center py-6 text-slate-400 text-xs">
-                            Pelanggan belum mengunggah bukti pembayaran foto/screenshot.
-                        </div>
                     @endif
+
+                    <!-- Upload Form (Admin Upload) -->
+                    <div x-show="showUploadForm" x-cloak class="space-y-3">
+                        @if(! $order->payment_proof)
+                            <div class="text-slate-500 text-xs text-center py-1">
+                                Belum ada bukti transfer. Anda dapat mengunggah bukti manual / screenshot WA di bawah:
+                            </div>
+                        @endif
+
+                        <form action="{{ route('admin.orders.upload-proof', $order) }}" method="POST" enctype="multipart/form-data" class="space-y-3 bg-slate-50/80 p-4 rounded-2xl border border-dashed border-slate-300">
+                            @csrf
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                    {{ $order->payment_proof ? 'Pilih Gambar Bukti Baru:' : 'Pilih File Gambar Bukti:' }}
+                                </label>
+                                
+                                <input type="file" 
+                                       name="payment_proof" 
+                                       accept="image/*" 
+                                       required
+                                       @change="const file = $event.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => newProofPreview = e.target.result; reader.readAsDataURL(file); }"
+                                       class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                <p class="text-[10px] text-slate-400 mt-1">Format: JPG, PNG, JPEG, WEBP (Maksimal 5MB)</p>
+                            </div>
+
+                            <!-- Preview gambar yang baru dipilih -->
+                            <template x-if="newProofPreview">
+                                <div class="rounded-xl overflow-hidden border border-blue-200">
+                                    <img :src="newProofPreview" alt="Preview Bukti Baru" class="w-full max-h-48 object-cover">
+                                </div>
+                            </template>
+
+                            <div class="flex items-center gap-2 pt-1">
+                                <input type="checkbox" name="mark_as_paid" value="1" id="mark_as_paid" checked class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="mark_as_paid" class="text-xs font-semibold text-slate-700 select-none cursor-pointer">
+                                    Tandai otomatis sebagai <span class="text-emerald-700 font-bold">Lunas (Paid)</span>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-xs py-2.5 rounded-xl transition cursor-pointer shadow-2xs">
+                                📤 Simpan & Unggah Bukti
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Delete Order Option -->

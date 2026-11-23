@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -180,5 +181,91 @@ class AdminOrderController extends Controller
         $order->delete();
 
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil dihapus.');
+    }
+
+    public function uploadProof(Request $request, Order $order): RedirectResponse
+    {
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'mark_as_paid' => 'nullable|boolean',
+        ]);
+
+        if ($request->hasFile('payment_proof')) {
+            try {
+                DB::statement('ALTER TABLE orders MODIFY payment_proof LONGTEXT NULL');
+            } catch (\Throwable $e) {
+            }
+
+            $base64Image = $this->processUploadedImage($request->file('payment_proof'));
+
+            $updateData = [
+                'payment_proof' => $base64Image,
+            ];
+
+            if ($request->boolean('mark_as_paid', true)) {
+                $updateData['payment_status'] = 'paid';
+                if (! $order->payment_confirmed_at) {
+                    $updateData['payment_confirmed_at'] = now();
+                }
+                if ($order->order_status === 'pending') {
+                    $updateData['order_status'] = 'processing';
+                }
+            } else {
+                $updateData['payment_status'] = 'pending_verification';
+            }
+
+            $order->update($updateData);
+        }
+
+        return redirect()->route('admin.orders.show', $order)
+            ->with('success', 'Bukti pembayaran pesanan berhasil diunggah!');
+    }
+
+    /**
+     * Convert and optimize uploaded image to Base64 Data URI for serverless cloud persistence
+     */
+    private function processUploadedImage(UploadedFile $file, int $maxWidth = 1200): string
+    {
+        $mime = $file->getMimeType() ?: 'image/jpeg';
+        $realPath = $file->getRealPath();
+        $imageData = null;
+
+        if (extension_loaded('gd') && function_exists('imagecreatefromstring')) {
+            try {
+                $raw = file_get_contents($realPath);
+                $src = @imagecreatefromstring($raw);
+                if ($src !== false) {
+                    $width = imagesx($src);
+                    $height = imagesy($src);
+
+                    if ($width > $maxWidth) {
+                        $newWidth = $maxWidth;
+                        $newHeight = (int) ($height * ($maxWidth / $width));
+                        $dst = imagecreatetruecolor($newWidth, $newHeight);
+
+                        imagealphablending($dst, false);
+                        imagesavealpha($dst, true);
+
+                        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                        imagedestroy($src);
+                        $src = $dst;
+                    }
+
+                    ob_start();
+                    imagejpeg($src, null, 80);
+                    $imageData = ob_get_clean();
+                    imagedestroy($src);
+                    $mime = 'image/jpeg';
+                }
+            } catch (\Throwable $e) {
+                $imageData = null;
+            }
+        }
+
+        if (! $imageData) {
+            $imageData = file_get_contents($realPath);
+        }
+
+        return "data:{$mime};base64,".base64_encode($imageData);
     }
 }

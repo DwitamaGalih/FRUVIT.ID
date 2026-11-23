@@ -127,6 +127,9 @@
                         <div class="text-slate-700">
                             Pesanan: <span class="text-slate-900 font-black">{{ $poSummary['count'] ?? $recentOrders->count() }}</span>
                         </div>
+                        <div class="text-blue-700 bg-blue-50/80 px-2.5 py-1 rounded-lg border border-blue-200/60">
+                            Total Item: <span class="text-blue-900 font-black">{{ $poSummary['total_items'] ?? 0 }} pcs</span>
+                        </div>
                         <div class="text-emerald-700">
                             Total Nilai: <span class="font-black">Rp {{ number_format($poSummary['total'] ?? 0, 0, ',', '.') }}</span>
                         </div>

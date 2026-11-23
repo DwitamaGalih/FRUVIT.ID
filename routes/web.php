@@ -55,6 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/pesanan', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/pesanan/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::post('/pesanan/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
+    Route::post('/pesanan/{order}/upload-bukti', [AdminOrderController::class, 'uploadProof'])->name('orders.upload-proof');
     Route::delete('/pesanan/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
     // Products

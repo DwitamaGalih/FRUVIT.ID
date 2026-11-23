@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Setting;
 use Illuminate\Contracts\View\View;
@@ -55,8 +56,12 @@ class AdminDashboardController extends Controller
                 $sumQuery->where('po_batch', $po);
             }
 
+            $orderIds = (clone $sumQuery)->pluck('id');
+            $totalItems = OrderItem::whereIn('order_id', $orderIds)->sum('quantity');
+
             $poSummary = [
                 'count' => $sumQuery->count(),
+                'total_items' => (int) $totalItems,
                 'total' => $sumQuery->sum('total_amount'),
             ];
         }
