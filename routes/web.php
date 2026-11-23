@@ -49,6 +49,13 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::post('/settings', [AdminDashboardController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/preview-email', function () {
+        $order = \App\Models\Order::with('items')->latest()->first();
+        if (! $order) {
+            return 'Belum ada data pesanan di database untuk ditampilkan.';
+        }
+        return new \App\Mail\NewOrderNotification($order);
+    })->name('preview-email');
     Route::get('/laporan/excel', [AdminOrderController::class, 'exportExcel'])->name('reports.excel');
 
     // Orders

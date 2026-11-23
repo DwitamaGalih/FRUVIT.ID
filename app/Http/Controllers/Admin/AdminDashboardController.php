@@ -82,6 +82,7 @@ class AdminDashboardController extends Controller
         $settings = [
             'store_status' => Setting::get('store_status', 'open'),
             'wa_admin' => Setting::get('wa_admin', '081234567890'),
+            'admin_email' => Setting::get('admin_email', env('MAIL_ADMIN_ADDRESS', 'fruvit.id@gmail.com')),
             'delivery_fee' => Setting::get('delivery_fee', 5000),
             'store_address' => Setting::get('store_address', 'Stand Kewirausahaan FRUVIT.ID'),
             'qris_image' => Setting::get('qris_image', 'images/qris-fruvit.jpg'),
@@ -95,6 +96,7 @@ class AdminDashboardController extends Controller
         $validated = $request->validate([
             'store_status' => 'required|in:open,closed',
             'wa_admin' => 'required|string',
+            'admin_email' => 'nullable|email',
             'delivery_fee' => 'required|numeric|min:0',
             'store_address' => 'required|string',
         ]);

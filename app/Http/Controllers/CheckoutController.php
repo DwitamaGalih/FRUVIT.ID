@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewOrderNotification;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -11,6 +12,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -132,6 +135,16 @@ class CheckoutController extends Controller
 
         // Clear cart
         $this->cartService->clear();
+
+        // Kirim email notifikasi pesanan baru ke tim FRUVIT
+        try {
+            $adminEmail = Setting::get('admin_email', env('MAIL_ADMIN_ADDRESS', 'fruvit.id@gmail.com'));
+            if (! empty($adminEmail)) {
+                Mail::to($adminEmail)->send(new NewOrderNotification($order));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Gagal mengirim notifikasi email pesanan baru: '.$e->getMessage());
+        }
 
         return redirect()->route('order.show', $order->order_number)
             ->with('success', 'Pesanan Anda berhasil dibuat! Silakan selesaikan pembayaran.');

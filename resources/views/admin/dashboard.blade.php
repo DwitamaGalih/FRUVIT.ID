@@ -238,6 +238,17 @@
                     </div>
 
                     <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="admin_email" class="block text-xs font-bold text-slate-700">Email Notifikasi Pesanan Masuk</label>
+                            <a href="{{ route('admin.preview-email') }}" target="_blank" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 underline">
+                                👁️ Preview Email &nearr;
+                            </a>
+                        </div>
+                        <input type="email" id="admin_email" name="admin_email" value="{{ $settings['admin_email'] }}" placeholder="contoh: timfruvit@gmail.com" class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-300">
+                        <p class="text-[10px] text-slate-400 mt-1">Setiap ada pesanan baru, rincian dikirim ke email ini.</p>
+                    </div>
+
+                    <div>
                         <label for="delivery_fee" class="block text-xs font-bold text-slate-700 mb-1.5">Ongkos Kirim Delivery (Rp)</label>
                         <input type="number" id="delivery_fee" name="delivery_fee" value="{{ $settings['delivery_fee'] }}" class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-300" required>
                     </div>
