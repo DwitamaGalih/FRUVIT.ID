@@ -596,23 +596,29 @@
                                         </label>
                                         <span class="text-[10px] text-slate-400">Pilih salah satu</span>
                                     </div>
-                                    <div class="grid grid-cols-3 gap-1.5">
+                                    <div class="grid grid-cols-4 gap-1 sm:gap-1.5">
+                                        <button type="button"
+                                                @click="productModal.sugarLevel = 'No sugar'"
+                                                class="py-2 px-1 rounded-lg text-[10px] sm:text-[11px] font-semibold border transition text-center cursor-pointer select-none"
+                                                :class="productModal.sugarLevel === 'No sugar' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                            No sugar
+                                        </button>
                                         <button type="button"
                                                 @click="productModal.sugarLevel = 'Less sugar'"
-                                                class="py-2 px-1 rounded-lg text-[11px] font-semibold border transition text-center cursor-pointer select-none"
+                                                class="py-2 px-1 rounded-lg text-[10px] sm:text-[11px] font-semibold border transition text-center cursor-pointer select-none"
                                                 :class="productModal.sugarLevel === 'Less sugar' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                             Less sugar
                                         </button>
                                         <button type="button"
                                                 @click="productModal.sugarLevel = 'Normal sugar'"
-                                                class="py-2 px-1 rounded-lg text-[11px] font-semibold border transition text-center cursor-pointer select-none"
+                                                class="py-2 px-1 rounded-lg text-[10px] sm:text-[11px] font-semibold border transition text-center cursor-pointer select-none"
                                                 :class="productModal.sugarLevel === 'Normal sugar' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                             Normal sugar
                                         </button>
                                         <button type="button"
                                                 @click="productModal.sugarLevel = 'extra sugar'"
-                                                class="py-2 px-1 rounded-lg text-[11px] font-semibold border transition text-center cursor-pointer select-none"
-                                                :class="productModal.sugarLevel === 'extra sugar' ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
+                                                class="py-2 px-1 rounded-lg text-[10px] sm:text-[11px] font-semibold border transition text-center cursor-pointer select-none"
+                                                :class="(productModal.sugarLevel === 'extra sugar' || productModal.sugarLevel === 'Extra sugar') ? 'bg-blue-600 text-white border-blue-600 shadow-2xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'">
                                             extra sugar
                                         </button>
                                     </div>
