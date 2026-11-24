@@ -39,11 +39,14 @@
             </div>
 
             <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
-                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Pesanan</div>
-                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1.5">
-                    {{ $stats['total_orders'] }}
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Pesanan (Item PO)</div>
+                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1.5 flex items-baseline gap-1.5">
+                    <span>{{ number_format($stats['total_orders'], 0, ',', '.') }}</span>
+                    <span class="text-xs sm:text-sm font-bold text-slate-500">pcs</span>
                 </div>
-                <div class="text-[10px] text-emerald-600 font-bold mt-1">{{ $stats['today_orders'] }} pesanan hari ini</div>
+                <div class="text-[10px] text-emerald-600 font-bold mt-1">
+                    {{ $stats['today_orders'] }} pcs hari ini <span class="text-slate-400 font-normal">({{ $stats['total_order_transactions'] }} transaksi)</span>
+                </div>
             </div>
 
             <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">

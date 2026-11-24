@@ -22,8 +22,11 @@ class AdminDashboardController extends Controller
         $stats = [
             'total_revenue' => Order::where('payment_status', 'paid')->sum('total_amount'),
             'today_revenue' => Order::where('payment_status', 'paid')->where('created_at', '>=', $today)->sum('total_amount'),
-            'total_orders' => Order::count(),
-            'today_orders' => Order::where('created_at', '>=', $today)->count(),
+            'total_orders' => (int) OrderItem::sum('quantity'),
+            'total_order_transactions' => Order::count(),
+            'today_orders' => (int) OrderItem::whereHas('order', function ($query) use ($today) {
+                $query->where('created_at', '>=', $today);
+            })->sum('quantity'),
             'pending_verifications' => Order::where('payment_status', 'pending_verification')->count(),
             'processing_orders' => Order::where('order_status', 'processing')->count(),
             'total_products' => Product::count(),
