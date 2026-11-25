@@ -26,46 +26,37 @@ class OrderController extends Controller
 
     public function uploadProof(Request $request, string $orderNumber): RedirectResponse
     {
+        @ini_set('memory_limit', '256M');
+
         $order = Order::where('order_number', $orderNumber)->firstOrFail();
 
         $request->validate([
-            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
         ], [
             'payment_proof.required' => 'File bukti pembayaran wajib dipilih.',
             'payment_proof.image' => 'File harus berupa foto / gambar.',
-            'payment_proof.max' => 'Ukuran file bukti pembayaran maksimal 5MB.',
+            'payment_proof.max' => 'Ukuran file bukti pembayaran maksimal 10MB.',
         ]);
 
-        if ($request->hasFile('payment_proof')) {
-            // Delete old proof if it was a stored local file
-            if ($order->payment_proof && ! str_starts_with($order->payment_proof, 'data:')) {
-                try {
-                    if (Storage::disk('public')->exists($order->payment_proof)) {
-                        Storage::disk('public')->delete($order->payment_proof);
-                    }
-                } catch (\Throwable $e) {
-                    // Suppress storage disk error on read-only serverless filesystems
-                }
+        try {
+            if ($request->hasFile('payment_proof')) {
+                $base64Image = $this->processUploadedImage($request->file('payment_proof'));
+
+                $order->update([
+                    'payment_proof' => $base64Image,
+                    'payment_status' => 'pending_verification',
+                    'order_status' => 'processing',
+                ]);
             }
 
-            // Ensure column can store base64 string on database
-            try {
-                DB::statement('ALTER TABLE orders MODIFY payment_proof LONGTEXT NULL');
-            } catch (\Throwable $e) {
-                // Ignore if already longtext or restricted
-            }
+            return redirect()->route('order.show', $order->order_number)
+                ->with('success', 'Bukti pembayaran berhasil diunggah! Pesanan Anda kini sedang diverifikasi oleh admin.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Upload payment proof error: '.$e->getMessage());
 
-            $base64Image = $this->processUploadedImage($request->file('payment_proof'));
-
-            $order->update([
-                'payment_proof' => $base64Image,
-                'payment_status' => 'pending_verification',
-                'order_status' => 'processing',
-            ]);
+            return redirect()->route('order.show', $order->order_number)
+                ->with('error', 'Gagal memproses bukti pembayaran karena jaringan sibuk. Silakan coba lagi atau kirim langsung ke WhatsApp admin.');
         }
-
-        return redirect()->route('order.show', $order->order_number)
-            ->with('success', 'Bukti pembayaran berhasil diunggah! Pesanan Anda kini sedang diverifikasi oleh admin.');
     }
 
     /**

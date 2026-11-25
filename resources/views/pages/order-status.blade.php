@@ -13,6 +13,20 @@
 }">
     <div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
         
+        @if(session('success'))
+            <div class="mb-4 p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-bold flex items-center gap-2 shadow-2xs">
+                <span>✓</span>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-4 p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl text-xs font-bold flex items-center gap-2 shadow-2xs">
+                <span>⚠️</span>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+
         <!-- Order Success & Status Banner -->
         <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-8 shadow-2xs text-center mb-4 sm:mb-6">
             <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl border border-blue-100 shadow-2xs">
@@ -144,18 +158,119 @@
                                 </ol>
                             </div>
 
-                            <!-- Upload Proof Box -->
-                            <div class="border border-dashed border-slate-300 rounded-xl p-3.5 bg-slate-50/70">
+                            <!-- Upload Proof Box with Auto-Compression -->
+                            <div class="border border-dashed border-slate-300 rounded-xl p-3.5 bg-slate-50/70"
+                                 x-data="{
+                                     isCompressing: false,
+                                     isSubmitting: false,
+                                     fileReady: false,
+                                     fileSizeText: '',
+                                     previewUrl: null,
+                                     handleFile(event) {
+                                         const file = event.target.files[0];
+                                         if (!file) return;
+
+                                         this.isCompressing = true;
+                                         this.fileReady = false;
+
+                                         const reader = new FileReader();
+                                         reader.onload = (e) => {
+                                             const img = new Image();
+                                             img.onload = () => {
+                                                 const canvas = document.createElement('canvas');
+                                                 let width = img.width;
+                                                 let height = img.height;
+                                                 const maxDim = 1200;
+
+                                                 if (width > maxDim || height > maxDim) {
+                                                     if (width > height) {
+                                                         height = Math.round((height * maxDim) / width);
+                                                         width = maxDim;
+                                                     } else {
+                                                         width = Math.round((width * maxDim) / height);
+                                                         height = maxDim;
+                                                     }
+                                                 }
+
+                                                 canvas.width = width;
+                                                 canvas.height = height;
+                                                 const ctx = canvas.getContext('2d');
+                                                 ctx.drawImage(img, 0, 0, width, height);
+
+                                                 canvas.toBlob((blob) => {
+                                                     if (blob) {
+                                                         const compressedFile = new File([blob], 'bukti_transfer.jpg', {
+                                                             type: 'image/jpeg',
+                                                             lastModified: Date.now()
+                                                         });
+
+                                                         if (window.DataTransfer) {
+                                                             const dt = new DataTransfer();
+                                                             dt.items.add(compressedFile);
+                                                             this.$refs.fileInput.files = dt.files;
+                                                         }
+
+                                                         this.previewUrl = URL.createObjectURL(blob);
+                                                         this.fileSizeText = (blob.size / 1024).toFixed(0) + ' KB';
+                                                         this.fileReady = true;
+                                                     }
+                                                     this.isCompressing = false;
+                                                 }, 'image/jpeg', 0.75);
+                                             };
+                                             img.src = e.target.result;
+                                         };
+                                         reader.readAsDataURL(file);
+                                     }
+                                 }">
                                 <h3 class="text-xs font-bold text-slate-800 mb-2">Upload Bukti Pembayaran</h3>
-                                <form action="{{ route('order.upload-proof', $order->order_number) }}" method="POST" enctype="multipart/form-data" class="space-y-2.5">
+                                <form action="{{ route('order.upload-proof', $order->order_number) }}" 
+                                      method="POST" 
+                                      enctype="multipart/form-data" 
+                                      class="space-y-2.5"
+                                      @submit="isSubmitting = true">
                                     @csrf
                                     <input type="file" 
                                            name="payment_proof" 
+                                           x-ref="fileInput"
                                            required 
                                            accept="image/*"
+                                           @change="handleFile($event)"
                                            class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white cursor-pointer">
-                                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-xl transition cursor-pointer shadow-2xs">
-                                        Konfirmasi Pembayaran
+
+                                    <!-- Loading status saat kompresi foto -->
+                                    <template x-if="isCompressing">
+                                        <div class="text-[11px] text-blue-600 font-bold flex items-center gap-1.5 py-1">
+                                            <svg class="animate-spin h-3.5 w-3.5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                            <span>Menyiapkan & mengompresi foto...</span>
+                                        </div>
+                                    </template>
+
+                                    <!-- Preview & Info Ukuran -->
+                                    <template x-if="fileReady && previewUrl">
+                                        <div class="flex items-center gap-2.5 p-2 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                            <img :src="previewUrl" alt="Preview Bukti" class="w-10 h-10 rounded-lg object-cover border border-emerald-300">
+                                            <div class="text-[11px]">
+                                                <div class="font-bold text-emerald-900 flex items-center gap-1">
+                                                    <span>✓ Foto Siap Dikirim</span>
+                                                    <span class="text-emerald-700 font-normal" x-text="'(' + fileSizeText + ')'"></span>
+                                                </div>
+                                                <div class="text-emerald-600 text-[10px]">Ukuran hemat & cepat diupload</div>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <button type="submit" 
+                                            :disabled="isCompressing || isSubmitting"
+                                            class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold text-xs py-2.5 rounded-xl transition cursor-pointer shadow-2xs flex items-center justify-center gap-1.5">
+                                        <template x-if="isSubmitting">
+                                            <span class="inline-flex items-center gap-1.5">
+                                                <svg class="animate-spin h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                                <span>Mengunggah bukti...</span>
+                                            </span>
+                                        </template>
+                                        <template x-if="!isSubmitting">
+                                            <span>Konfirmasi Pembayaran</span>
+                                        </template>
                                     </button>
                                 </form>
                             </div>

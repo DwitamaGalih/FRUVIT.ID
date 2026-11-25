@@ -191,11 +191,6 @@ class AdminOrderController extends Controller
         ]);
 
         if ($request->hasFile('payment_proof')) {
-            try {
-                DB::statement('ALTER TABLE orders MODIFY payment_proof LONGTEXT NULL');
-            } catch (\Throwable $e) {
-            }
-
             $base64Image = $this->processUploadedImage($request->file('payment_proof'));
 
             $updateData = [
