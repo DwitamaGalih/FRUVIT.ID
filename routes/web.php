@@ -39,6 +39,10 @@ Route::get('/pesanan/{order_number}', [OrderController::class, 'show'])->name('o
 Route::post('/pesanan/{order_number}/upload-bukti', [OrderController::class, 'uploadProof'])->name('order.upload-proof');
 Route::get('/lacak-pesanan', [OrderController::class, 'track'])->name('order.track');
 
+// Loader.io Verification
+Route::get('/loaderio-c9feb9a5e98849ee3b965349170ff54f', fn () => response('loaderio-c9feb9a5e98849ee3b965349170ff54f', 200, ['Content-Type' => 'text/plain']));
+Route::get('/loaderio-c9feb9a5e98849ee3b965349170ff54f.txt', fn () => response('loaderio-c9feb9a5e98849ee3b965349170ff54f', 200, ['Content-Type' => 'text/plain']));
+
 // Admin Authentication
 Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
