@@ -107,6 +107,77 @@ class OrderController extends Controller
         return "data:{$mime};base64,".base64_encode($imageData);
     }
 
+    public function paymentProof(string $order_number): \Symfony\Component\HttpFoundation\Response
+    {
+        $order = Order::where('order_number', $order_number)
+            ->orWhere('id', $order_number)
+            ->firstOrFail();
+
+        if (! $order->payment_proof) {
+            abort(404, 'Bukti pembayaran tidak ditemukan.');
+        }
+
+        // Direct external URL redirect
+        if (str_starts_with($order->payment_proof, 'http://') || str_starts_with($order->payment_proof, 'https://')) {
+            return redirect()->away($order->payment_proof);
+        }
+
+        // Base64 Data URI
+        if (str_starts_with($order->payment_proof, 'data:')) {
+            if (preg_match('/^data:([^;]+);base64,(.+)$/s', $order->payment_proof, $matches)) {
+                $mime = $matches[1];
+                $binary = base64_decode($matches[2]);
+
+                // Compress if very large (> 1MB) so Vercel bandwidth stays tiny
+                if (strlen($binary) > 1024 * 1024 && extension_loaded('gd') && function_exists('imagecreatefromstring')) {
+                    try {
+                        $src = @imagecreatefromstring($binary);
+                        if ($src !== false) {
+                            $width = imagesx($src);
+                            $height = imagesy($src);
+                            if ($width > 1200) {
+                                $newWidth = 1200;
+                                $newHeight = (int) ($height * (1200 / $width));
+                                $dst = imagecreatetruecolor($newWidth, $newHeight);
+                                imagealphablending($dst, false);
+                                imagesavealpha($dst, true);
+                                imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                                imagedestroy($src);
+                                $src = $dst;
+                            }
+                            ob_start();
+                            imagejpeg($src, null, 80);
+                            $compressed = ob_get_clean();
+                            imagedestroy($src);
+                            if ($compressed) {
+                                $binary = $compressed;
+                                $mime = 'image/jpeg';
+                            }
+                        }
+                    } catch (\Throwable $e) {
+                        // ignore and use raw binary
+                    }
+                }
+
+                return response($binary, 200, [
+                    'Content-Type' => $mime,
+                    'Content-Length' => strlen($binary),
+                    'Cache-Control' => 'public, max-age=86400, stale-while-revalidate=604800',
+                ]);
+            }
+        }
+
+        // Local storage file fallback
+        $localPath = storage_path('app/public/'.$order->payment_proof);
+        if (file_exists($localPath)) {
+            return response()->file($localPath, [
+                'Cache-Control' => 'public, max-age=86400',
+            ]);
+        }
+
+        abort(404, 'File bukti pembayaran tidak ditemukan.');
+    }
+
     public function track(Request $request): View
     {
         $keyword = trim($request->query('q', ''));

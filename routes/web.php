@@ -36,6 +36,7 @@ Route::post('/checkout/proses', [CheckoutController::class, 'process'])->name('c
 
 // Order & Payment Routes
 Route::get('/pesanan/{order_number}', [OrderController::class, 'show'])->name('order.show');
+Route::get('/pesanan/{order_number}/bukti-pembayaran', [OrderController::class, 'paymentProof'])->name('order.payment-proof');
 Route::post('/pesanan/{order_number}/upload-bukti', [OrderController::class, 'uploadProof'])->name('order.upload-proof');
 Route::get('/lacak-pesanan', [OrderController::class, 'track'])->name('order.track');
 

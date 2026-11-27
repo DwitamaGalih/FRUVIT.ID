@@ -125,11 +125,12 @@ class Order extends Model
             return null;
         }
 
-        if (str_starts_with($this->payment_proof, 'data:') || str_starts_with($this->payment_proof, 'http')) {
+        if (str_starts_with($this->payment_proof, 'http://') || str_starts_with($this->payment_proof, 'https://')) {
             return $this->payment_proof;
         }
 
-        return asset('storage/'.$this->payment_proof);
+        // Stream via dedicated image route to prevent bloating HTML response payload (avoids Vercel 4.5MB limit)
+        return route('order.payment-proof', $this->order_number);
     }
 
     /**
